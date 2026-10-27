@@ -1,4 +1,4 @@
-# 部署个人主页到阿里云 ECS：8.138.227.156
+﻿# 部署个人主页到阿里云 ECS：8.138.227.156
 # 用法：pwsh -File deploy.ps1            # 上传并校验
 #       pwsh -File deploy.ps1 -DryRun    # 只做本地校验，不上传
 param(
@@ -73,3 +73,9 @@ if ([int]$plain -ne $bytes) { throw "公网返回 $plain B，与本地 $bytes B 
 if ([int]$gzSize -le 0 -or [int]$brSize -le 0) { throw "gzip/br 响应异常（$gzSize / $brSize）" }
 "公网 HTTPS $s"
 "部署完成：http://8.138.227.156/  https://8.138.227.156/"
+
+# 5) 同步到 GitHub 仓库（走 API：本机到 github.com:443 的 git 传输不稳定）
+Write-Host ""
+Write-Host "=== 同步 git 仓库 ===" -ForegroundColor Cyan
+$msg = "deploy: " + (Get-Date -Format 'yyyy-MM-dd HH:mm') + " 上线"
+& node (Join-Path $PSScriptRoot 'sync-git.mjs') $msg
