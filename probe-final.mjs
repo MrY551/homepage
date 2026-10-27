@@ -1,0 +1,33 @@
+import { writeFileSync } from 'node:fs';
+const PORT=process.env.CDP_PORT, W=Number(process.env.VW), H=Number(process.env.VH);
+const list=await (await fetch(`http://127.0.0.1:${PORT}/json/list`)).json();
+const page=list.find(t=>t.type==='page');
+const ws=new WebSocket(page.webSocketDebuggerUrl);
+let id=0;const pending=new Map();
+ws.addEventListener('message',ev=>{const m=JSON.parse(ev.data);if(m.id&&pending.has(m.id)){const p=pending.get(m.id);pending.delete(m.id);m.error?p.reject(new Error(JSON.stringify(m.error))):p.resolve(m.result);}});
+const send=(method,params={})=>new Promise((res,rej)=>{const mid=++id;pending.set(mid,{resolve:res,reject:rej});ws.send(JSON.stringify({id:mid,method,params}));});
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+await new Promise(r=>ws.addEventListener('open',r));
+await send('Page.enable');await send('Runtime.enable');
+await send('Emulation.setDeviceMetricsOverride',{width:W,height:H,deviceScaleFactor:2,mobile:W<600,screenWidth:W,screenHeight:H});
+await send('Page.navigate',{url:'http://8.138.227.156/'});
+await sleep(2500);
+// 打开菜单
+await send('Runtime.evaluate',{expression:`document.getElementById('talkBtn').click()`});
+await sleep(400);
+const menu=await send('Runtime.evaluate',{returnByValue:true,expression:`(()=>{const m=document.getElementById('talkMenu');return [...m.querySelectorAll('.talk-item')].filter(e=>getComputedStyle(e).display!=='none').map(e=>(e.textContent||'').replace(/\s+/g,' ').trim());})()`});
+console.log('可见菜单项:', JSON.stringify(menu.result.value));
+const s1=await send('Page.captureScreenshot',{format:'png'});
+writeFileSync(process.env.OUT_DIR+`/shot-menu-${W}.png`,Buffer.from(s1.data,'base64'));
+// 关菜单，滚到联系区，点 QQ 卡
+await send('Runtime.evaluate',{expression:`document.body.click(); document.getElementById('contact').scrollIntoView({block:'center'})`});
+await sleep(700);
+const before=await send('Runtime.evaluate',{returnByValue:true,expression:`(()=>{const c=document.querySelector('[data-qq-card]');return {copy:c.getAttribute('data-copy'),label:c.querySelector('.l').textContent,href:c.getAttribute('href')};})()`});
+console.log('QQ 卡状态:', JSON.stringify(before.result.value));
+await send('Runtime.evaluate',{expression:`document.querySelector('[data-qq-card]').click()`});
+await sleep(500);
+const after=await send('Runtime.evaluate',{returnByValue:true,expression:`(()=>{const t=document.querySelector('.talk-toast');return t?{text:t.textContent,show:t.getAttribute('data-show')}:null;})()`});
+console.log('点击后提示:', JSON.stringify(after.result.value));
+const s2=await send('Page.captureScreenshot',{format:'png'});
+writeFileSync(process.env.OUT_DIR+`/shot-contact-${W}.png`,Buffer.from(s2.data,'base64'));
+ws.close();process.exit(0);

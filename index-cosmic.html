@@ -1,0 +1,884 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#05050f">
+<title>小黄 · 热爱代码，奔赴热爱</title>
+<meta name="description" content="小黄的个人主页：文件登记系统（PHP + MySQL，含在线演示）、Xiao Huang 银河麒麟 ARM64 Web 环境安装包。">
+<meta name="author" content="小黄">
+<meta property="og:title" content="小黄 · 热爱代码，奔赴热爱">
+<meta property="og:description" content="一个代码爱好者。写工具、做安装包，把需要服务端的东西塞进浏览器里跑。">
+<meta property="og:type" content="profile">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%237c5cff'/%3E%3Ctext x='32' y='45' font-size='34' font-family='sans-serif' font-weight='700' fill='%23fff' text-anchor='middle'%3E%E9%BB%84%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --ink:#eef0ff;
+    --ink-dim:rgba(238,240,255,.72);
+    --ink-mute:rgba(238,240,255,.5);
+    --glass:rgba(255,255,255,.115);
+    --glass-2:rgba(255,255,255,.05);
+    --stroke:rgba(255,255,255,.16);
+    --stroke-2:rgba(255,255,255,.1);
+    --violet:#7c5cff;
+    --cyan:#59d1ff;
+    --pink:#ef7cff;
+    --r:22px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    min-height:100vh;color:var(--ink);
+    font:15px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    -webkit-font-smoothing:antialiased;
+    background:
+      radial-gradient(760px 520px at 16% 12%, rgba(126,86,255,.42), transparent 62%),
+      radial-gradient(680px 520px at 84% 22%, rgba(72,120,255,.34), transparent 64%),
+      radial-gradient(720px 560px at 60% 88%, rgba(186,86,224,.3), transparent 66%),
+      radial-gradient(500px 380px at 8% 82%, rgba(60,180,255,.18), transparent 70%),
+      linear-gradient(160deg,#050510 0%,#0a0a20 48%,#07071a 100%);
+    background-attachment:fixed;
+    overflow-x:hidden;
+  }
+  /* 星云颗粒感 */
+  body::after{
+    content:"";position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.5;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+    mix-blend-mode:screen;
+  }
+  #particles{position:fixed;inset:0;z-index:0;display:block;width:100%;height:100%}
+  .page{position:relative;z-index:2;max-width:1020px;margin:0 auto;padding:26px 20px 60px}
+
+  a{color:inherit;text-decoration:none}
+  code{
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9em;
+    background:rgba(255,255,255,.09);border:1px solid var(--stroke-2);
+    padding:1px 6px;border-radius:5px;color:#b9f3ff;
+  }
+
+  /* ---------- 顶部玻璃条 ---------- */
+  .navbar{
+    position:sticky;top:14px;z-index:20;margin-bottom:30px;
+    display:flex;align-items:center;gap:14px;
+    padding:9px 14px 9px 12px;border-radius:18px;
+    background:rgba(12,12,32,.55);border:1px solid var(--stroke-2);
+    backdrop-filter:blur(14px) saturate(140%);
+    -webkit-backdrop-filter:blur(14px) saturate(140%);
+  }
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;letter-spacing:.3px}
+  .brand .mark{
+    width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font-size:14px;font-weight:700;
+    background:linear-gradient(135deg,var(--violet),var(--cyan));color:#0b0b1c;
+  }
+  .brand em{font-style:normal;font-size:12px;font-weight:400;color:var(--ink-mute);margin-left:2px}
+  .navlinks{margin-left:auto;display:flex;gap:4px;font-size:13.5px}
+  .navlinks a{padding:6px 11px;border-radius:9px;color:var(--ink-dim)}
+  .navlinks a:hover{background:rgba(255,255,255,.09);color:#fff}
+  .navlinks a.cta{background:rgba(124,92,255,.9);color:#fff;font-weight:600}
+  .navlinks a.cta:hover{background:rgba(124,92,255,1)}
+  /* ---------- 「聊聊」下拉 ---------- */
+  .talk{position:relative;margin-left:6px}
+  .talk-btn{
+    display:inline-flex;align-items:center;gap:6px;border:0;font:inherit;font-size:13.5px;font-weight:600;
+    padding:7px 13px;border-radius:9px;cursor:pointer;color:#fff;
+    background:linear-gradient(135deg,rgba(124,92,255,.95),rgba(90,140,255,.9));
+    transition:.2s;
+  }
+  .talk-btn:hover{filter:brightness(1.08)}
+  .talk-btn:focus-visible{outline:2px solid rgba(180,160,255,.9);outline-offset:2px}
+  .talk-btn .caret{font-size:9px;opacity:.85;transition:transform .2s}
+  .talk-btn[aria-expanded="true"] .caret{transform:rotate(180deg)}
+  .talk-menu{
+    position:absolute;right:0;top:calc(100% + 8px);width:250px;padding:6px;z-index:60;
+    border-radius:14px;background:rgba(16,16,34,.96);border:1px solid rgba(255,255,255,.16);
+    box-shadow:0 18px 46px rgba(0,0,0,.5);
+    backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    opacity:0;transform:translateY(-6px) scale(.98);pointer-events:none;
+    transition:opacity .18s,transform .18s;
+  }
+  .talk-menu[data-open="true"]{opacity:1;transform:none;pointer-events:auto}
+  .talk-item{
+    display:flex;align-items:center;gap:10px;width:100%;text-align:left;
+    padding:9px 10px;border:0;border-radius:9px;background:none;font-family:inherit;
+    color:#e9ecff;font-size:13.2px;text-decoration:none;cursor:pointer;
+  }
+  .talk-item:hover{background:rgba(255,255,255,.1);color:#fff;text-decoration:none}
+  .talk-item:focus-visible{outline:2px solid rgba(180,160,255,.9);outline-offset:-2px}
+  .talk-item .ic{
+    width:26px;height:26px;border-radius:8px;flex:none;display:grid;place-items:center;font-size:13px;
+    background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.14);
+  }
+  .talk-item .tx{display:flex;flex-direction:column;line-height:1.35;min-width:0}
+  .talk-item .tx small{color:rgba(233,236,255,.55);font-size:11px}
+  .talk-item .hint{margin-left:auto;font-size:11px;color:rgba(233,236,255,.45);white-space:nowrap}
+  .talk-sep{height:1px;margin:5px 8px;background:rgba(255,255,255,.1)}
+  @media (max-width:620px){
+    /* 手机端只给「复制 QQ 号」「复制微信号」两项 */
+    .talk-menu .desk-only{display:none}
+    .talk-menu{width:214px}
+  }
+  .talk-toast{
+    position:fixed;left:50%;bottom:28px;transform:translate(-50%,10px);z-index:80;
+    padding:9px 16px;border-radius:999px;font-size:12.5px;font-weight:600;color:#0b0b1c;
+    background:#c7f5df;box-shadow:0 10px 30px rgba(0,0,0,.35);
+    opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;
+  }
+  .talk-toast[data-show="true"]{opacity:1;transform:translate(-50%,0)}
+
+  /* ---------- 主玻璃卡 ---------- */
+  .hero{
+    position:relative;border-radius:32px;padding:38px 38px 34px;
+    background:linear-gradient(150deg,rgba(255,255,255,.13),rgba(255,255,255,.06) 55%,rgba(255,255,255,.085));
+    border:1px solid rgba(255,255,255,.22);
+    box-shadow:
+      0 30px 80px rgba(6,4,30,.6),
+      0 2px 0 rgba(255,255,255,.06) inset,
+      0 -40px 90px rgba(124,92,255,.18) inset;
+    overflow:hidden;
+  }
+  /* 卡片里的星云 */
+  .hero::before{
+    content:"";position:absolute;inset:-40%;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(closest-side at 62% 34%, rgba(146,102,255,.74), transparent 70%),
+      radial-gradient(closest-side at 30% 70%, rgba(74,156,255,.52), transparent 72%),
+      radial-gradient(closest-side at 78% 76%, rgba(238,128,255,.46), transparent 74%);
+    filter:blur(18px);
+  }
+  .hero > *{position:relative;z-index:1}
+  .hero-top{display:flex;align-items:center;gap:26px}
+
+  .avatar{
+    width:120px;height:120px;border-radius:50%;flex:none;position:relative;
+    display:grid;place-items:center;font-size:48px;font-weight:700;color:#fff;
+    background:linear-gradient(140deg,#6d5bff,#3aa6ff 55%,#b46cff);
+    box-shadow:0 0 0 2px rgba(255,255,255,.32), 0 12px 40px rgba(110,80,255,.45);
+  }
+  .avatar::after{
+    content:"";position:absolute;inset:0;border-radius:50%;
+    background:radial-gradient(circle at 32% 26%, rgba(255,255,255,.45), transparent 55%);
+  }
+  .avatar span{position:relative;z-index:1;text-shadow:0 2px 12px rgba(0,0,0,.28)}
+
+  .who h1{margin:0 0 10px;font-size:clamp(26px,4vw,38px);letter-spacing:.5px;line-height:1.2}
+  .who .tag{margin:0 0 6px;font-size:clamp(15px,2.2vw,19px);color:#fff;opacity:.94;letter-spacing:.4px}
+  .who .sub{margin:0;color:var(--ink-dim);font-size:13.8px;max-width:40em}
+
+  .actions{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:28px}
+  .actions a{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    padding:15px 10px;border-radius:16px;font-size:15px;font-weight:600;letter-spacing:.3px;
+    background:rgba(255,255,255,.075);border:1px solid rgba(255,255,255,.14);
+    color:#fff;transition:transform .28s cubic-bezier(.2,.8,.3,1),background .28s,border-color .28s,box-shadow .28s;
+    backdrop-filter:blur(8px);
+  }
+  .actions a:hover{
+    transform:translateY(-4px);background:rgba(255,255,255,.16);
+    border-color:rgba(255,255,255,.3);box-shadow:0 14px 34px rgba(124,92,255,.34);
+  }
+  .actions a .ico{opacity:.85;font-size:15px}
+
+  /* ---------- 区块 ---------- */
+  .sec{margin-top:34px}
+  .sec-hd{display:flex;align-items:baseline;gap:10px;margin:0 0 14px;padding-left:2px}
+  .sec-hd h2{margin:0;font-size:17px;letter-spacing:.4px}
+  .sec-hd span{font-size:12.5px;color:var(--ink-mute);letter-spacing:.6px;text-transform:uppercase}
+
+  /* 筛选胶囊 */
+  .controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+  .search{
+    display:flex;align-items:center;gap:8px;flex:1;min-width:220px;max-width:360px;
+    padding:0 14px;height:40px;border-radius:13px;
+    background:rgba(255,255,255,.06);border:1px solid var(--stroke-2);
+    backdrop-filter:blur(8px);
+  }
+  .search:focus-within{border-color:rgba(160,140,255,.65);box-shadow:0 0 0 3px rgba(124,92,255,.18)}
+  .search svg{opacity:.55;flex:none}
+  .search input{
+    flex:1;border:0;background:transparent;outline:none;color:var(--ink);
+    font:inherit;font-size:13.5px;min-width:0;
+  }
+  .search input::placeholder{color:var(--ink-mute)}
+  .pill{
+    padding:8px 15px;border-radius:12px;font-size:13px;color:var(--ink-dim);cursor:pointer;
+    background:rgba(255,255,255,.05);border:1px solid var(--stroke-2);font-family:inherit;
+    transition:.2s;
+  }
+  .pill:hover{background:rgba(255,255,255,.12);color:#fff}
+  .pill[aria-pressed="true"]{
+    background:linear-gradient(135deg,rgba(124,92,255,.85),rgba(90,140,255,.8));
+    border-color:rgba(190,170,255,.55);color:#fff;font-weight:600;
+  }
+  .count{margin-left:auto;font-size:12.5px;color:var(--ink-mute)}
+  .count b{color:#cdbcff;font-size:14px}
+
+  /* 作品玻璃卡 */
+  .works{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+  .work{
+    position:relative;border-radius:24px;padding:24px 24px 18px;overflow:hidden;
+    background:linear-gradient(155deg,rgba(255,255,255,.115),rgba(255,255,255,.05));
+    border:1px solid var(--stroke);
+    box-shadow:0 16px 44px rgba(6,4,30,.45), 0 1px 0 rgba(255,255,255,.08) inset;
+    transition:transform .3s cubic-bezier(.2,.8,.3,1),box-shadow .3s,border-color .3s;
+    display:flex;flex-direction:column;
+  }
+  .work::before{
+    content:"";position:absolute;inset:-30% -20% auto;height:70%;z-index:0;
+    background:radial-gradient(closest-side,rgba(124,92,255,.4),transparent 72%);
+    filter:blur(20px);opacity:.75;transition:opacity .3s;
+  }
+  .work:hover{transform:translateY(-5px);border-color:rgba(200,185,255,.42);box-shadow:0 26px 60px rgba(80,50,190,.4)}
+  .work:hover::before{opacity:1}
+  .work > *{position:relative;z-index:1}
+  .work .kicker{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+  .work .kicker b{
+    font-size:11.5px;letter-spacing:.6px;padding:3px 10px;border-radius:999px;
+    background:rgba(255,255,255,.12);border:1px solid var(--stroke-2);color:#dfe1ff;font-weight:600;
+  }
+  .work .kicker i{font-style:normal;font-size:11.5px;color:var(--ink-mute);margin-left:auto}
+  .work h3{margin:0 0 10px;font-size:18.5px;line-height:1.45;letter-spacing:.2px}
+  .work p{margin:0 0 14px;color:var(--ink-dim);font-size:13.4px;line-height:1.8;flex:1}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+  .tags span{
+    font-size:11.5px;padding:3px 9px;border-radius:7px;color:#cfd3ff;
+    background:rgba(255,255,255,.06);border:1px solid var(--stroke-2);
+  }
+  .work .links{display:flex;gap:10px;flex-wrap:wrap;border-top:1px solid var(--stroke-2);padding-top:14px}
+  .work .links a{
+    font-size:13px;font-weight:600;padding:8px 14px;border-radius:11px;
+    background:rgba(255,255,255,.07);border:1px solid var(--stroke-2);color:#fff;transition:.22s;
+  }
+  .work .links a:hover{background:rgba(255,255,255,.16);transform:translateY(-2px)}
+  .work .links a.demo{
+    background:linear-gradient(135deg,rgba(0,181,120,.85),rgba(60,210,160,.8));
+    border-color:rgba(120,255,210,.4);
+  }
+  .work .links a.demo:hover{filter:brightness(1.08)}
+
+  /* 演示提示 */
+  .notice{
+    margin-top:16px;padding:16px 20px;border-radius:18px;font-size:13.2px;line-height:1.9;
+    background:rgba(255,255,255,.055);border:1px solid var(--stroke-2);
+    border-left:3px solid rgba(124,92,255,.85);color:var(--ink-dim);
+  }
+  .notice b{color:#fff}
+  .notice .badge{
+    display:inline-block;margin-left:8px;padding:1px 9px;border-radius:999px;font-size:11.5px;font-weight:600;
+    background:rgba(124,92,255,.28);border:1px solid rgba(180,160,255,.45);color:#e6dcff;
+  }
+
+  /* 关于 */
+  .about{
+    padding:22px 24px;border-radius:22px;font-size:13.8px;line-height:1.9;color:var(--ink-dim);
+    background:rgba(255,255,255,.062);border:1px solid var(--stroke-2);
+  }
+  .about p{margin:0 0 12px}
+  .about p:last-child{margin-bottom:0}
+  .stack{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
+  .stack span{
+    font-size:12px;padding:4px 11px;border-radius:8px;color:#d8dcff;
+    background:rgba(255,255,255,.06);border:1px solid var(--stroke-2);
+  }
+
+  /* 联系 */
+  .contacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+  .contact{
+    display:flex;align-items:center;gap:13px;padding:16px 18px;border-radius:18px;
+    background:rgba(255,255,255,.068);border:1px solid var(--stroke-2);
+    transition:.24s;
+  }
+  .contact:hover{background:rgba(255,255,255,.12);transform:translateY(-3px)}
+
+  .contact .ico{
+    width:38px;height:38px;border-radius:12px;flex:none;display:grid;place-items:center;font-size:16px;
+    background:linear-gradient(135deg,rgba(124,92,255,.5),rgba(90,160,255,.45));
+    border:1px solid rgba(255,255,255,.18);
+  }
+  .contact .l{font-size:11.5px;color:var(--ink-mute);letter-spacing:.4px}
+  .contact .v{font-size:14px;font-weight:600;word-break:break-all}
+  .contact .qr{width:38px;height:38px;flex:none;border-radius:8px;background:#fff;padding:3px;object-fit:contain}
+  .contact.qr-card{cursor:default}
+  .contact.qr-card:hover{transform:none;background:rgba(255,255,255,.06)}
+
+  footer{
+    margin-top:44px;padding-top:20px;border-top:1px solid var(--stroke-2);
+    display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+    font-size:12.3px;color:var(--ink-mute);
+  }
+  footer a{color:var(--ink-mute)}
+  footer a:hover{color:#fff}
+
+  /* 进入动画 */
+  .rise{animation:rise .9s cubic-bezier(.2,.8,.25,1) both}
+  .d1{animation-delay:.05s}.d2{animation-delay:.14s}.d3{animation-delay:.23s}.d4{animation-delay:.32s}
+  @keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+
+  /* 响应式 */
+  @media (max-width:820px){
+    .hero{padding:28px 24px 26px;border-radius:26px}
+    .hero-top{gap:18px}
+    .avatar{width:92px;height:92px;font-size:38px}
+    .actions{grid-template-columns:repeat(2,1fr);gap:10px}
+    .navlinks a:not(.cta){display:none}
+  }
+  @media (max-width:520px){
+    .page{padding:16px 14px 44px}
+    .hero-top{flex-direction:column;align-items:flex-start;gap:16px}
+    .work{padding:20px 18px 16px}
+    .count{margin-left:0;width:100%}
+    footer{flex-direction:column;gap:6px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    html{scroll-behavior:auto}
+  }
+  /* ===== 背景固定图层：background-attachment:fixed 在移动端会丢背景，这里改成独立图层 ===== */
+  /* body 也铺同一套渐变：长页截图/滚动回弹时不会露出纯黑 */
+  body{
+    background-color:#050510;
+    background-image:
+      radial-gradient(760px 520px at 16% 12%, rgba(126,86,255,.42), transparent 62%),
+      radial-gradient(680px 520px at 84% 22%, rgba(72,120,255,.34), transparent 64%),
+      radial-gradient(720px 560px at 60% 88%, rgba(186,86,224,.30), transparent 66%),
+      radial-gradient(500px 380px at 8% 82%, rgba(60,180,255,.18), transparent 70%),
+      linear-gradient(160deg,#050510 0%,#0a0a20 48%,#07071a 100%);
+    background-repeat:no-repeat;
+    background-size:cover;
+  }
+  .space{
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(760px 520px at 16% 12%, rgba(126,86,255,.42), transparent 62%),
+      radial-gradient(680px 520px at 84% 22%, rgba(72,120,255,.34), transparent 64%),
+      radial-gradient(720px 560px at 60% 88%, rgba(186,86,224,.30), transparent 66%),
+      radial-gradient(500px 380px at 8% 82%, rgba(60,180,255,.18), transparent 70%),
+      linear-gradient(160deg,#050510 0%,#0a0a20 48%,#07071a 100%);
+  }
+  body::after{z-index:1}
+  #particles{z-index:1}
+  .page{z-index:2}
+
+  /* ===== 性能：小屏与小内存设备降级 ===== */
+  @media (max-width: 820px){
+    body::after{display:none}                      /* 全屏噪点混合层很贵，手机上关掉 */
+
+  }
+  @supports (content-visibility: auto){
+    .sec{content-visibility:auto;contain-intrinsic-size:auto 520px}
+  }</style></head>
+<body>
+
+<div class="space" aria-hidden="true"></div>
+
+<canvas id="particles" aria-hidden="true"></canvas>
+
+<div class="page">
+
+  <nav class="navbar rise">
+    <a class="brand" href="/"><span class="mark">黄</span>小黄<em>· 作品</em></a>
+    <div class="navlinks">
+      <a href="#works">作品</a>
+      <a href="#about">关于</a>
+      <a href="#contact">联系</a>
+      <div class="talk">
+        <button class="talk-btn" id="talkBtn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="talkMenu">
+          聊聊 <span class="caret" aria-hidden="true">▼</span>
+        </button>
+        <div class="talk-menu" id="talkMenu" role="menu" aria-labelledby="talkBtn" data-open="false">
+          <a class="talk-item desk-only" role="menuitem" href="tencent://AddContact/?fromId=45&amp;fromSubId=1&amp;subcmd=all&amp;uin=1924053793&amp;website=www.oicqzone.com">
+            <span class="ic">企</span>
+            <span class="tx">加 QQ 好友<small>1924053793 · 打开 QQ 添加</small></span>
+            <span class="hint">打开</span>
+          </a>
+
+          <button class="talk-item" role="menuitem" type="button" data-copy="1924053793" data-copy-label="QQ 号">
+            <span class="ic">⧉</span>
+            <span class="tx">复制 QQ 号<small>1924053793</small></span>
+            <span class="hint" data-copy-hint>点一下</span>
+          </button>
+          <div class="talk-sep desk-only" role="separator"></div>
+          <a class="talk-item desk-only" role="menuitem" href="mailto:1924053793@qq.com">
+            <span class="ic">✉</span>
+            <span class="tx">发邮件<small>1924053793@qq.com</small></span>
+            <span class="hint">写邮件</span>
+          </a>
+          <button class="talk-item" role="menuitem" type="button" id="copyWechat" data-copy="HuangYi7763">
+            <span class="ic">✆</span>
+            <span class="tx">复制微信号<small>HuangYi7763</small></span>
+            <span class="hint" id="copyHint">点一下</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero rise d1">
+    <div class="hero-top">
+      <div class="avatar"><span>黄</span></div>
+      <div class="who">
+        <h1>小黄</h1>
+        <p class="tag">热爱代码，奔赴热爱</p>
+        <p class="sub">一个代码爱好者。写工具、做安装包，喜欢把部署压成一条命令，也喜欢把需要服务端的东西塞进浏览器里跑。</p>
+      </div>
+    </div>
+
+    <div class="actions">
+      <a href="https://github.com/MrY551" target="_blank" rel="noopener noreferrer"><span class="ico">⌥</span>GitHub</a>
+      <a href="#works"><span class="ico">▤</span>作品集</a>
+      <a href="https://github.com/MrY551?tab=repositories" target="_blank" rel="noopener noreferrer"><span class="ico">✎</span>仓库</a>
+      <a href="#contact"><span class="ico">✉</span>联系我</a>
+    </div>
+  </header>
+
+  <section class="sec rise d2" id="works">
+    <div class="sec-hd"><h2>作品</h2><span>Works</span></div>
+
+    <div class="controls">
+      <label class="search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path>
+        </svg>
+        <input id="q" type="search" placeholder="搜索作品或技术栈" autocomplete="off" aria-label="搜索作品">
+      </label>
+      <button class="pill" aria-pressed="true"  data-type="all">全部</button>
+      <button class="pill" aria-pressed="false" data-type="web">Web 应用</button>
+      <button class="pill" aria-pressed="false" data-type="system">系统工具</button>
+      <span class="count">共 <b id="count">2</b> 个作品</span>
+    </div>
+
+    <div class="works" id="works-grid">
+
+      <article class="work" data-type="web"
+               data-search="文件登记系统 php mysql 公文 编号 签批 批示 xlsx 导出 备份 登记 web">
+        <div class="kicker"><b>Web 应用</b><i>MIT</i></div>
+        <h3>文件登记系统</h3>
+        <p>选前缀自动生成公文编号（<code>前缀2026【001】</code>），逐级签批、首长批示留痕、多条件筛选分页；数据库可导出/导入 SQL 备份（导入前自动快照），导出真 xlsx 且不依赖 zip 扩展。</p>
+        <div class="tags">
+          <span>PHP 7.3+</span><span>MySQL</span><span>xlsx 导出</span><span>CSRF</span>
+        </div>
+        <div class="links">
+          <a class="demo" href="/demo/" target="_blank" rel="noopener">在线演示 ↗</a>
+          <a href="https://github.com/MrY551/wenjian" target="_blank" rel="noopener noreferrer">查看仓库 ↗</a>
+        </div>
+      </article>
+
+      <article class="work" data-type="system"
+               data-search="xiaohuang 银河麒麟 arm64 web 环境 安装包 phpstudy nginx apache php-fpm mariadb vsftpd deb run kylin 系统工具">
+        <div class="kicker"><b>系统工具</b><i>MIT</i></div>
+        <h3>Xiao Huang — 银河麒麟 ARM64 Web 环境安装包</h3>
+        <p>把 Windows 版 phpStudy V8 的目录布局、组件配置与路径规则复刻到银河麒麟 V10 / aarch64。Nginx、Apache、PHP-FPM、MariaDB、vsftpd 全部内置且自带依赖库，安装不联网，产物为 deb 与自解压 run。</p>
+        <div class="tags">
+          <span>Shell</span><span>Debian 打包</span><span>ARM64</span><span>离线安装</span>
+        </div>
+        <div class="links">
+          <a href="https://github.com/MrY551/ARM-" target="_blank" rel="noopener noreferrer">查看仓库 ↗</a>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="notice">
+      <b>在线演示可直接登录</b><span class="badge">无需注册</span><br>
+      账号 <code>demo</code> / 口令 <code>demo1234</code>（superadmin，可进用户管理）；普通账号 <code>zhang</code> / <code>User@1234</code>、<code>li</code> / <code>User@1234</code> 用来看按用户隔离的数据视图。演示库每 30 分钟自动重置，随便点。
+    </div>
+  </section>
+
+  <section class="sec rise d3" id="about">
+    <div class="sec-hd"><h2>关于</h2><span>About</span></div>
+    <div class="about">
+      <p>我是小黄，一个代码爱好者。日常写工具和脚本，更在意“能不能直接跑起来”，而不是写了多少行。</p>
+      <p>做过的两类活儿：一类是把 Windows 版 phpStudy V8 的目录布局、组件配置和路径规则复刻到银河麒麟 ARM64，做成离线可装的包；一类是把登记、核对这类活儿放进浏览器里直接跑。过程中借阅了大量开源项目，站在别人肩膀上拼装、改造、补齐验证用例。</p>
+      <div class="stack">
+        <span>PHP</span><span>MySQL</span><span>JavaScript</span><span>Node.js</span>
+        <span>Python</span><span>Shell</span><span>Nginx</span><span>Apache</span>
+        <span>Debian 打包</span><span>ARM64</span><span>Linux 运维</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec rise d4" id="contact">
+    <div class="sec-hd"><h2>联系</h2><span>Contact</span></div>
+    <div class="contacts">
+      <a class="contact" href="mailto:1924053793@qq.com">
+        <div class="ico">✉</div><div><div class="l">邮箱</div><div class="v">1924053793@qq.com</div></div>
+      </a>      <a class="contact" href="tencent://AddContact/?fromId=45&amp;fromSubId=1&amp;subcmd=all&amp;uin=1924053793&amp;website=www.oicqzone.com" data-qq-card="1924053793">
+        <div class="ico">企</div>
+        <div><div class="l">QQ 加好友</div><div class="v">1924053793</div></div>
+      </a>
+
+      <a class="contact" href="https://github.com/MrY551" target="_blank" rel="noopener noreferrer">
+        <div class="ico">⌥</div><div><div class="l">GitHub</div><div class="v">github.com/MrY551</div></div>
+      </a>
+      <div class="contact" style="cursor:default">
+        <div class="ico">✆</div><div><div class="l">微信</div><div class="v">HuangYi7763</div></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>© <span id="y"></span> 小黄 · 热爱代码，奔赴热爱</span>
+    <span>Nginx 1.28 · PHP 8.5 · 自建服务器托管　<a href="#top">回到顶部</a></span>
+  </footer>
+
+</div>
+
+<script>
+/* ================= 星域背景：粒子 + 连线 + 流星 ================= */
+(function () {
+  var canvas = document.getElementById('particles');
+  var ctx = canvas.getContext('2d', { alpha: true });
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var W = 0, H = 0, DPR = 1;
+  var particles = [];
+  var stars = [];          // 远景静态星点
+  var shooting = [];       // 流星
+  var sprite = null;       // 预渲染光点，避免逐帧 shadowBlur
+  var starLayer = null;    // 预渲染远景星，避免逐帧 arc
+  var raf = 0;
+  var lastShot = 0;
+
+  var LINK = 132;          // 连线阈值
+  var MOUSE_R = 150;       // 鼠标牵引半径
+
+  var mouse = { x: -9999, y: -9999 };
+
+  function makeSprite() {
+    var size = 64;
+    var c = document.createElement('canvas');
+    c.width = c.height = size;
+    var g = c.getContext('2d');
+    var grad = g.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+    grad.addColorStop(0, 'rgba(255,255,255,1)');
+    grad.addColorStop(0.28, 'rgba(196,180,255,0.75)');
+    grad.addColorStop(0.62, 'rgba(140,110,255,0.22)');
+    grad.addColorStop(1, 'rgba(120,90,255,0)');
+    g.fillStyle = grad;
+    g.fillRect(0, 0, size, size);
+    return c;
+  }
+
+  function resize() {
+    W = window.innerWidth;
+    H = window.innerHeight;
+    DPR = Math.min(window.devicePixelRatio || 1, W < 700 ? 1 : 1.5);   // 小屏 1x、桌面 1.5x
+    canvas.width = Math.floor(W * DPR);
+    canvas.height = Math.floor(H * DPR);
+    canvas.style.width = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    build();
+  }
+
+  function build() {
+    var area = W * H;
+    var count = Math.round(Math.min(40, Math.max(14, area / 30000)));
+    particles = [];
+    for (var i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.26,
+        vy: (Math.random() - 0.5) * 0.26,
+        r: Math.random() * 1.7 + 0.5,
+        a: Math.random() * 0.45 + 0.25,
+        tw: Math.random() * Math.PI * 2,
+        tws: 0.006 + Math.random() * 0.012
+      });
+    }
+    // 远景细星
+    stars = [];
+    var sc = Math.round(Math.min(160, area / 8000));
+    for (var j = 0; j < sc; j++) {
+      stars.push({
+        x: Math.random() * W, y: Math.random() * H,
+        r: Math.random() * 0.9 + 0.2,
+        a: Math.random() * 0.5 + 0.15
+      });
+    }
+
+    /* 远景星一次性画到离屏画布：逐帧只 1 次 drawImage，替代上百次 arc+fill */
+    starLayer = document.createElement('canvas');
+    starLayer.width = Math.floor(W * DPR);
+    starLayer.height = Math.floor(H * DPR);
+    var sl = starLayer.getContext('2d');
+    sl.setTransform(DPR, 0, 0, DPR, 0, 0);
+    for (var m = 0; m < stars.length; m++) {
+      sl.globalAlpha = stars[m].a;
+      sl.fillStyle = '#cfd6ff';
+      sl.beginPath(); sl.arc(stars[m].x, stars[m].y, stars[m].r, 0, Math.PI * 2); sl.fill();
+    }
+  }
+
+  /* 空间网格连线：把 O(n²) 降到近似 O(n)，粒子多时也不掉帧 */
+  function drawLinks() {
+    var cell = LINK, cols = Math.ceil(W / cell) + 1, rows = Math.ceil(H / cell) + 1;
+    var grid = new Array(cols * rows);
+    for (var i = 0; i < particles.length; i++) {
+      var p = particles[i];
+      var cx = Math.floor(p.x / cell), cy = Math.floor(p.y / cell);
+      var k = cy * cols + cx;
+      (grid[k] || (grid[k] = [])).push(i);
+    }
+    ctx.lineWidth = 0.7;
+    for (var ci = 0; ci < grid.length; ci++) {
+      var bucket = grid[ci];
+      if (!bucket) continue;
+      for (var a = 0; a < bucket.length; a++) {
+        var pa = particles[bucket[a]];
+        for (var b = a + 1; b < bucket.length; b++) {
+          var pb = particles[bucket[b]];
+          var dx = pa.x - pb.x, dy = pa.y - pb.y;
+          var d2 = dx * dx + dy * dy;
+          if (d2 < LINK * LINK) {
+            var d = Math.sqrt(d2);
+            ctx.strokeStyle = 'rgba(158,140,255,' + (0.16 * (1 - d / LINK)).toFixed(3) + ')';
+            ctx.beginPath(); ctx.moveTo(pa.x, pa.y); ctx.lineTo(pb.x, pb.y); ctx.stroke();
+          }
+        }
+      }
+    }
+  }
+
+  function drawShooting(t) {
+    if (t - lastShot > 4200 + Math.random() * 2600) {
+      lastShot = t;
+      var fromLeft = Math.random() > 0.5;
+      shooting.push({
+        x: fromLeft ? Math.random() * W * 0.5 : W * (0.55 + Math.random() * 0.4),
+        y: Math.random() * H * 0.45,
+        vx: (fromLeft ? 1 : -1) * (5.5 + Math.random() * 2.5),
+        vy: 1.9 + Math.random() * 1.2,
+        life: 1
+      });
+    }
+    for (var i = shooting.length - 1; i >= 0; i--) {
+      var s = shooting[i];
+      s.x += s.vx; s.y += s.vy; s.life -= 0.011;
+      if (s.life <= 0 || s.x < -200 || s.x > W + 200 || s.y > H + 100) { shooting.splice(i, 1); continue; }
+      var tailX = s.x - s.vx * 13, tailY = s.y - s.vy * 13;
+      var g = ctx.createLinearGradient(s.x, s.y, tailX, tailY);
+      g.addColorStop(0, 'rgba(255,255,255,' + (0.85 * s.life) + ')');
+      g.addColorStop(0.4, 'rgba(180,200,255,' + (0.35 * s.life) + ')');
+      g.addColorStop(1, 'rgba(140,120,255,0)');
+      ctx.strokeStyle = g; ctx.lineWidth = 1.8; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(s.x, s.y); ctx.lineTo(tailX, tailY); ctx.stroke();
+    }
+  }
+
+  var lastT = 0;
+  function frame(t) {
+    /* 30fps 节流：60Hz 屏上省一半 GPU，观感几乎无差 */
+    if (t - lastT < 33) { raf = requestAnimationFrame(frame); return; }
+    lastT = t;
+    ctx.clearRect(0, 0, W, H);
+
+    // 远景星（离屏贴图）
+    if (starLayer) ctx.drawImage(starLayer, 0, 0, W, H);
+
+    drawLinks();
+
+    // 近景粒子（贴图 + lighter 叠加，替代 shadowBlur）
+    ctx.globalCompositeOperation = 'lighter';
+    for (var i = 0; i < particles.length; i++) {
+      var p = particles[i];
+      p.tw += p.tws;
+      var tw = 0.72 + Math.sin(p.tw) * 0.28;
+
+      // 鼠标轻微牵引
+      var dx = mouse.x - p.x, dy = mouse.y - p.y;
+      var md = Math.sqrt(dx * dx + dy * dy);
+      if (md < MOUSE_R && md > 0.001) {
+        var f = (1 - md / MOUSE_R) * 0.06;
+        p.vx += (dx / md) * f;
+        p.vy += (dy / md) * f;
+      }
+      // 阻尼，避免越跑越快
+      p.vx *= 0.995; p.vy *= 0.995;
+
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < -20) p.x = W + 20; else if (p.x > W + 20) p.x = -20;
+      if (p.y < -20) p.y = H + 20; else if (p.y > H + 20) p.y = -20;
+
+      var size = p.r * 9;
+      ctx.globalAlpha = p.a * tw;
+      ctx.drawImage(sprite, p.x - size / 2, p.y - size / 2, size, size);
+    }
+    ctx.globalAlpha = 1;
+    ctx.globalCompositeOperation = 'source-over';
+
+    drawShooting(t);
+    raf = requestAnimationFrame(frame);
+  }
+
+  function start() {
+    if (reduce) {          // 减少动态：只画一帧静态星图
+      ctx.clearRect(0, 0, W, H);
+      if (starLayer) ctx.drawImage(starLayer, 0, 0, W, H);
+      for (var i = 0; i < particles.length; i++) {
+        var p = particles[i], size = p.r * 8;
+        ctx.globalAlpha = p.a;
+        ctx.drawImage(sprite, p.x - size / 2, p.y - size / 2, size, size);
+      }
+      ctx.globalAlpha = 1;
+      return;
+    }
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(frame);
+  }
+
+  window.addEventListener('resize', function () { resize(); start(); }, { passive: true });
+  window.addEventListener('pointermove', function (e) { mouse.x = e.clientX; mouse.y = e.clientY; }, { passive: true });
+  window.addEventListener('pointerleave', function () { mouse.x = -9999; mouse.y = -9999; }, { passive: true });
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) { cancelAnimationFrame(raf); }
+    else if (!reduce) { raf = requestAnimationFrame(frame); }
+  });
+
+  sprite = makeSprite();
+  resize();
+  /* 延迟到主线程空闲再启动，避免和首屏渲染抢资源 */
+  if (reduce) {
+    start();
+  } else if ('requestIdleCallback' in window) {
+    requestIdleCallback(function () { start(); }, { timeout: 1200 });
+  } else {
+    setTimeout(start, 300);
+  }
+})();
+
+/* ================= 作品筛选 ================= */
+(function () {
+  var grid = document.getElementById('works-grid');
+  var cards = [].slice.call(grid.querySelectorAll('.work'));
+  var countEl = document.getElementById('count');
+  var q = document.getElementById('q');
+  var pills = [].slice.call(document.querySelectorAll('.pill[data-type]'));
+  var type = 'all', keyword = '';
+
+  function apply() {
+    var n = 0;
+    cards.forEach(function (c) {
+      var okType = type === 'all' || c.dataset.type === type;
+      var hay = ((c.dataset.search || '') + ' ' + c.textContent).toLowerCase();
+      var okKey = !keyword || hay.indexOf(keyword) > -1;
+      var ok = okType && okKey;
+      c.hidden = !ok;
+      if (ok) n++;
+    });
+    countEl.textContent = n;
+  }
+
+  pills.forEach(function (b) {
+    b.addEventListener('click', function () {
+      type = b.dataset.type;
+      pills.forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+      apply();
+    });
+  });
+
+  var t;
+  q.addEventListener('input', function () {
+    clearTimeout(t);
+    t = setTimeout(function () { keyword = q.value.trim().toLowerCase(); apply(); }, 130);
+  });
+
+  document.getElementById('y').textContent = new Date().getFullYear();
+  apply();
+})();
+</script>
+<script>
+/* 「聊聊」下拉：点击展开、点外面关闭、Esc 关闭、复制微信号 */
+(function () {
+  var btn = document.getElementById('talkBtn');
+  var menu = document.getElementById('talkMenu');
+  if (!btn || !menu) return;
+
+  function open() { menu.setAttribute('data-open', 'true'); btn.setAttribute('aria-expanded', 'true'); }
+  function close() { menu.setAttribute('data-open', 'false'); btn.setAttribute('aria-expanded', 'false'); }
+  function toggle() { menu.getAttribute('data-open') === 'true' ? close() : open(); }
+
+  btn.addEventListener('click', function (e) { e.stopPropagation(); toggle(); });
+
+  document.addEventListener('click', function (e) {
+    if (!menu.contains(e.target) && e.target !== btn) close();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && menu.getAttribute('data-open') === 'true') { close(); btn.focus(); }
+  });
+  menu.addEventListener('click', function (e) {
+    // 点了跳转类条目就收起菜单（复制按钮自己处理）
+    if (e.target.closest('a.talk-item')) close();
+  });
+
+  /* 复制：任意带 data-copy 的元素都能用（QQ 号、微信号） */
+  var toast = document.createElement('div');
+  toast.className = 'talk-toast';
+  document.body.appendChild(toast);
+  var timer = null;
+  function showToast(text) {
+    toast.textContent = text;
+    toast.setAttribute('data-show', 'true');
+    clearTimeout(timer);
+    timer = setTimeout(function () { toast.setAttribute('data-show', 'false'); }, 1800);
+  }
+
+  function doCopy(el) {
+    var val = el.getAttribute('data-copy');
+    var label = el.getAttribute('data-copy-label') || '内容';
+    var hint = el.querySelector('[data-copy-hint]');
+    var done = function () {
+      showToast('已复制' + label + '：' + val);
+      if (hint) hint.textContent = '已复制';
+      if (menu.contains(el)) close();
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(val).then(done, fallback);
+    } else { fallback(); }
+
+    function fallback() {
+      var ta = document.createElement('textarea');
+      ta.value = val;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); done(); }
+      catch (err) { showToast('复制失败，请手动选中：' + val); }
+      document.body.removeChild(ta);
+    }
+  }
+
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('[data-copy]');
+    if (el) { e.preventDefault(); doCopy(el); }
+  });
+})();
+</script>
+<script>
+/* 手机端：联系区的 QQ 卡从"拉起客户端"变成"复制号码" */
+(function () {
+  var card = document.querySelector('[data-qq-card]');
+  if (!card) return;
+  var mq = window.matchMedia('(max-width:620px)');
+  var label = card.querySelector('.l');
+  function sync() {
+    if (mq.matches) {
+      card.setAttribute('data-copy', card.getAttribute('data-qq-card'));
+      card.setAttribute('data-copy-label', 'QQ 号');
+      if (label) label.textContent = 'QQ · 点一下复制';
+    } else {
+      card.removeAttribute('data-copy');
+      card.removeAttribute('data-copy-label');
+      if (label) label.textContent = 'QQ 加好友';
+    }
+  }
+  sync();
+  if (mq.addEventListener) mq.addEventListener('change', sync);
+  else if (mq.addListener) mq.addListener(sync);
+})();
+</script>
+</body>
+</html>

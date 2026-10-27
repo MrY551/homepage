@@ -1,0 +1,31 @@
+import { writeFileSync } from 'node:fs';
+const PORT='9405';
+const list=await (await fetch(`http://127.0.0.1:${PORT}/json/list`)).json();
+const page=list.find(t=>t.type==='page');
+const ws=new WebSocket(page.webSocketDebuggerUrl);
+let id=0;const pending=new Map();
+ws.addEventListener('message',ev=>{const m=JSON.parse(ev.data);if(m.id&&pending.has(m.id)){const p=pending.get(m.id);pending.delete(m.id);m.error?p.reject(new Error(JSON.stringify(m.error))):p.resolve(m.result);}});
+const send=(method,params={})=>new Promise((res,rej)=>{const mid=++id;pending.set(mid,{resolve:res,reject:rej});ws.send(JSON.stringify({id:mid,method,params}));});
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+await new Promise(r=>ws.addEventListener('open',r));
+await send('Page.enable');await send('Runtime.enable');
+await send('Emulation.setDeviceMetricsOverride',{width:1280,height:1000,deviceScaleFactor:2,mobile:false});
+await send('Page.navigate',{url:'http://8.138.227.156/'});
+await sleep(3000);
+const info=await send('Runtime.evaluate',{returnByValue:true,expression:`(()=>{
+  const cards=[...document.querySelectorAll('.work')];
+  return {count:cards.length, counter:document.getElementById('count').textContent,
+    cards:cards.map(c=>({type:c.dataset.type,title:c.querySelector('h3').textContent.trim(),
+      demo:!!c.querySelector('a.demo'), repo:(c.querySelector('a[href*="github.com"]')||{}).href}))};})()`});
+console.log(JSON.stringify(info.result.value,null,2));
+// 测筛选：只看系统工具
+await send('Runtime.evaluate',{expression:`document.querySelector('.pill[data-type="system"]').click()`});
+await sleep(300);
+const f1=await send('Runtime.evaluate',{returnByValue:true,expression:`({visible:[...document.querySelectorAll('.work')].filter(c=>!c.hidden).length,counter:document.getElementById('count').textContent})`});
+console.log('筛选 系统工具:', JSON.stringify(f1.result.value));
+await send('Runtime.evaluate',{expression:`document.querySelector('.pill[data-type="all"]').click();document.getElementById('works').scrollIntoView({block:'start'})`});
+await sleep(600);
+const s=await send('Page.captureScreenshot',{format:'png'});
+writeFileSync(process.env.OUT_DIR+'/shot-works-3.png',Buffer.from(s.data,'base64'));
+console.log('saved shot-works-3.png');
+ws.close();process.exit(0);

@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>小黄的作品库 · 文件登记系统 / 银河麒麟 ARM64 Web 环境</title>
+<meta name="description" content="小黄的作品库：文件登记系统（PHP + MySQL，含在线演示）、Xiao Huang 银河麒麟 ARM64 Web 环境安装包。">
+<meta name="author" content="小黄">
+<meta property="og:title" content="小黄的作品库">
+<meta property="og:description" content="写工具，做安装包，把需要服务端的东西塞进浏览器里跑。">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232f6fed'/%3E%3Ctext x='32' y='45' font-size='36' font-family='sans-serif' font-weight='700' fill='%23fff' text-anchor='middle'%3E%E9%BB%84%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#f5f6f8; --panel:#fff; --fg:#1d2129; --sub:#4e5969; --muted:#86909c;
+    --line:#e5e6eb; --line-2:#dcdfe6;
+    --brand:#2f6fed; --brand-dark:#1f57c9; --brand-soft:#eaf1ff;
+    --green:#00b578; --orange:#ff7d00;
+    --r:10px;
+    --sh:0 1px 2px rgba(0,0,0,.04);
+    --sh-hover:0 10px 26px rgba(31,87,201,.16);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--bg);color:var(--fg);
+    font:14px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--brand);text-decoration:none}
+  a:hover{text-decoration:underline}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9em;
+       background:#f2f3f5;border:1px solid var(--line);border-radius:4px;padding:1px 5px;color:#0e7c5a}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 20px}
+
+  /* ============ 顶栏 ============ */
+  .topbar{position:sticky;top:0;z-index:60;background:#fff;border-bottom:1px solid var(--line)}
+  .topbar .wrap{height:64px;display:flex;align-items:center;gap:22px}
+  .logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:17px;color:var(--fg);flex:none}
+  .logo:hover{text-decoration:none}
+  .logo-mark{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;color:#fff;font-size:15px;
+             background:linear-gradient(135deg,var(--brand),#5aa0ff)}
+  .logo em{font-style:normal;font-size:12px;color:var(--muted);font-weight:400;margin-left:2px}
+
+  .searchwrap{flex:1;max-width:560px;display:flex;height:38px;border:2px solid var(--brand);border-radius:19px;overflow:hidden;background:#fff}
+  .searchwrap select{
+    border:0;outline:none;background:#fff;color:var(--sub);font:inherit;font-size:13px;
+    padding:0 6px 0 14px;border-right:1px solid var(--line);cursor:pointer;
+  }
+  .searchwrap input{flex:1;border:0;outline:none;padding:0 12px;font:inherit;font-size:14px;color:var(--fg);min-width:0}
+  .searchwrap button{
+    border:0;background:var(--brand);color:#fff;font:inherit;font-weight:600;font-size:13.5px;
+    padding:0 22px;cursor:pointer;
+  }
+  .searchwrap button:hover{background:var(--brand-dark)}
+
+  .topnav{display:flex;align-items:center;gap:2px;margin-left:auto;flex:none}
+  .topnav a{padding:7px 11px;border-radius:8px;color:var(--sub);font-size:14px}
+  .topnav a:hover{background:#f2f3f5;color:var(--fg);text-decoration:none}
+  .topnav a.on{color:var(--brand);background:var(--brand-soft);font-weight:600}
+  .topnav a.mail{background:var(--brand);color:#fff;font-weight:600;margin-left:8px}
+  .topnav a.mail:hover{background:var(--brand-dark);color:#fff}
+
+  /* ============ 通栏 banner ============ */
+  .banner{margin:18px auto 0}
+  .banner-in{
+    background:linear-gradient(112deg,#16307d 0%,#2f6fed 58%,#5aa0ff 100%);
+    border-radius:14px;color:#fff;padding:28px 30px;
+    display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;
+    box-shadow:0 12px 30px rgba(31,87,201,.22);
+  }
+  .banner h1{margin:0 0 10px;font-size:27px;line-height:1.3;letter-spacing:-.3px;display:flex;align-items:center;gap:12px}
+  .banner h1 .avatar{width:44px;height:44px;border-radius:12px;background:rgba(255,255,255,.2);display:grid;place-items:center;font-size:21px;flex:none}
+  .banner p{margin:0 0 16px;color:rgba(255,255,255,.88);font-size:14.5px;max-width:46em}
+  .banner-links{display:flex;gap:10px;flex-wrap:wrap}
+  .banner-links a{padding:8px 17px;border-radius:9px;font-size:13px;font-weight:600}
+  .banner-links .p{background:#fff;color:var(--brand-dark)}
+  .banner-links .p:hover{background:#eef4ff;text-decoration:none}
+  .banner-links .g{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.42)}
+  .banner-links .g:hover{background:rgba(255,255,255,.24);text-decoration:none}
+  .banner-stats{display:flex;gap:20px;border-left:1px solid rgba(255,255,255,.26);padding-left:22px}
+  .banner-stats div{text-align:center;min-width:52px}
+  .banner-stats b{display:block;font-size:21px;line-height:1.2}
+  .banner-stats span{font-size:11.5px;color:rgba(255,255,255,.75)}
+
+  /* ============ 结果区 ============ */
+  .main{padding:18px 0 44px;display:grid;grid-template-columns:196px 1fr;gap:18px;align-items:start}
+  .side{display:flex;flex-direction:column;gap:12px;position:sticky;top:82px}
+  .box{background:#fff;border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh)}
+  .box-h{padding:11px 13px;border-bottom:1px solid var(--line);font-size:13px;font-weight:600;color:var(--sub);display:flex;align-items:center;gap:6px}
+  .box-h::before{content:"";width:3px;height:12px;border-radius:2px;background:var(--brand)}
+  .box-b{padding:8px}
+  .cat{display:block;width:100%;text-align:left;border:0;background:transparent;font:inherit;font-size:13px;
+       color:var(--sub);padding:8px 10px;border-radius:8px;cursor:pointer;display:flex;justify-content:space-between;gap:8px}
+  .cat:hover{background:#f2f3f5;color:var(--fg)}
+  .cat[aria-pressed="true"]{background:var(--brand-soft);color:var(--brand);font-weight:600}
+  .cat .n{color:var(--muted);font-size:12px;font-weight:400}
+  .cat[aria-pressed="true"] .n{color:var(--brand)}
+  .kv{font-size:12.5px;color:var(--sub)}
+  .kv div{display:flex;justify-content:space-between;gap:8px;padding:6px 4px;border-bottom:1px dashed var(--line)}
+  .kv div:last-child{border-bottom:0}
+  .kv .k{color:var(--muted)}
+  .kv .v{font-weight:600;color:var(--fg)}
+
+  /* 分类 tab 条（带数量） */
+  .tabstrip{background:#fff;border:1px solid var(--line);border-radius:var(--r) var(--r) 0 0;border-bottom:0;
+            display:flex;gap:4px;padding:0 8px;overflow-x:auto;box-shadow:var(--sh)}
+  .tabstrip button{
+    border:0;background:transparent;font:inherit;font-size:14px;color:var(--sub);
+    padding:13px 14px 11px;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;
+    display:flex;align-items:center;gap:6px;
+  }
+  .tabstrip button:hover{color:var(--fg)}
+  .tabstrip button[aria-pressed="true"]{color:var(--brand);font-weight:600;border-bottom-color:var(--brand)}
+  .tabstrip .n{font-size:11.5px;color:var(--muted);background:#f2f3f5;border-radius:999px;padding:1px 7px}
+  .tabstrip button[aria-pressed="true"] .n{background:var(--brand-soft);color:var(--brand)}
+
+  /* 筛选/排序行 */
+  .filterbar{
+    background:#fff;border:1px solid var(--line);border-top:1px solid var(--line);
+    border-radius:0 0 var(--r) var(--r);padding:9px 14px;display:flex;align-items:center;gap:16px;
+    flex-wrap:wrap;font-size:13px;color:var(--sub);margin-bottom:14px;
+  }
+  .filterbar .grp{display:flex;align-items:center;gap:8px}
+  .filterbar .lab{color:var(--muted);font-size:12.5px}
+  .filterbar .chip{
+    border:1px solid transparent;background:transparent;font:inherit;font-size:12.5px;color:var(--sub);
+    padding:3px 9px;border-radius:6px;cursor:pointer;
+  }
+  .filterbar .chip:hover{background:#f2f3f5}
+  .filterbar .chip[aria-pressed="true"]{background:var(--brand-soft);color:var(--brand);font-weight:600;border-color:#cfe0ff}
+  .filterbar select{
+    border:1px solid var(--line-2);border-radius:7px;background:#fff;font:inherit;font-size:12.5px;
+    color:var(--sub);padding:4px 8px;outline:none;cursor:pointer;
+  }
+  .filterbar .total{margin-left:auto;color:var(--muted);font-size:12.5px}
+  .filterbar .total b{color:var(--brand);font-size:14px}
+
+  /* 卡片网格 */
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(268px,1fr));gap:16px}
+  .card{
+    max-width:640px;
+    background:#fff;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;
+    display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s,border-color .18s;box-shadow:var(--sh);
+  }
+  .card:hover{transform:translateY(-3px);box-shadow:var(--sh-hover);border-color:#c9d8f8}
+  .cover{position:relative;aspect-ratio:16/9;display:flex;flex-direction:column;justify-content:flex-end;padding:12px 14px;color:#fff;overflow:hidden}
+  .cover::before{content:"";position:absolute;inset:0;
+    background-image:radial-gradient(circle at 84% 16%,rgba(255,255,255,.3),transparent 44%),
+                     radial-gradient(circle at 8% 96%,rgba(255,255,255,.16),transparent 46%)}
+  .cover .kind{position:absolute;top:10px;left:12px;font-size:11px;letter-spacing:.4px;
+    background:rgba(255,255,255,.22);border:1px solid rgba(255,255,255,.36);padding:2px 8px;border-radius:999px}
+  .cover .lic{position:absolute;top:10px;right:12px;font-size:11px;background:rgba(0,0,0,.24);padding:2px 8px;border-radius:999px}
+  .cover .glyph{position:relative;font-size:22px;font-weight:800;letter-spacing:.4px;line-height:1.25}
+  .cover .sub{position:relative;font-size:11.5px;opacity:.85;margin-top:3px}
+  .cover.blue{background:linear-gradient(135deg,#2f6fed,#4c8dff 62%,#6aa8ff)}
+  .cover.violet{background:linear-gradient(135deg,#5b4bdb,#7a63f0 62%,#9b86ff)}
+  .cover .hover{
+    position:absolute;inset:0;background:rgba(14,32,72,.62);opacity:0;transition:opacity .18s;
+    display:flex;align-items:center;justify-content:center;gap:10px;z-index:2;
+  }
+  .card:hover .cover .hover{opacity:1}
+  .cover .hover a{background:#fff;color:var(--brand-dark);padding:7px 15px;border-radius:8px;font-size:12.5px;font-weight:600}
+  .cover .hover a:hover{text-decoration:none;background:#eef4ff}
+  .cover .hover a.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.6)}
+  .cover .hover a.ghost:hover{background:rgba(255,255,255,.16)}
+
+  .body{padding:12px 14px 0;display:flex;flex-direction:column;flex:1}
+  .body h3{margin:0 0 7px;font-size:15px;line-height:1.45;font-weight:600}
+  .body h3 a{color:var(--fg)}
+  .body h3 a:hover{color:var(--brand);text-decoration:none}
+  .body p{margin:0 0 10px;font-size:12.6px;line-height:1.72;color:#666f7d;flex:1;
+          display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+  .tags span{font-size:11.5px;color:#5c6b7f;background:#f2f4f8;border:1px solid var(--line);padding:1px 7px;border-radius:4px}
+  .foot{border-top:1px solid var(--line);padding:9px 14px;display:flex;align-items:center;gap:10px;font-size:11.8px;color:var(--muted)}
+  .foot .meta{display:flex;gap:10px;flex-wrap:wrap}
+  .foot .meta i{font-style:normal;display:inline-flex;align-items:center;gap:3px}
+  .foot a{margin-left:auto;font-weight:600;font-size:12.3px;display:inline-flex;gap:4px;align-items:center}
+  .foot a.demo{color:var(--green)}
+  .foot a.demo:hover{filter:brightness(.92);text-decoration:none}
+
+  /* 分页 */
+  .pager{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:20px;font-size:13px;color:var(--sub);flex-wrap:wrap}
+  .pager .pg{border:1px solid var(--line-2);background:#fff;color:var(--sub);border-radius:7px;padding:5px 11px;font:inherit;font-size:12.5px}
+  .pager .pg[aria-current="true"]{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
+  .pager .pg:disabled{color:#c4c9d1;cursor:not-allowed}
+  .pager .info{margin-left:10px;color:var(--muted);font-size:12.5px}
+
+  /* 提示条 */
+  .notice{margin-top:16px;background:#fff;border:1px solid var(--line);border-left:3px solid var(--brand);
+          border-radius:var(--r);padding:12px 16px;font-size:12.6px;line-height:1.85;color:#666f7d}
+  .notice b{color:var(--fg)}
+  .notice .pill{display:inline-block;background:var(--brand-soft);color:var(--brand);border-radius:999px;
+                padding:1px 9px;font-size:11.5px;font-weight:600;margin-left:6px}
+
+  /* 关于 / 联系 */
+  .sec{margin-top:22px}
+  .sec-hd{display:flex;align-items:baseline;gap:9px;margin:0 0 10px}
+  .sec-hd h2{margin:0;font-size:16px}
+  .sec-hd span{font-size:12px;color:var(--muted)}
+  .about{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;box-shadow:var(--sh)}
+  .about p{margin:0 0 10px;font-size:13.2px;line-height:1.85;color:var(--sub)}
+  .about p:last-child{margin-bottom:0}
+  .stack{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .stack span{font-size:11.8px;color:var(--sub);background:#f7f8fa;border:1px solid var(--line);padding:3px 9px;border-radius:5px}
+  .contacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
+  .contact{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:13px 15px;display:flex;gap:11px;align-items:center;box-shadow:var(--sh)}
+  .contact .ico{width:34px;height:34px;border-radius:9px;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center;font-size:15px;flex:none}
+  .contact .l{font-size:11.5px;color:var(--muted)}
+  .contact .v{font-size:13.2px;font-weight:600;word-break:break-all}
+
+  footer{border-top:1px solid var(--line);margin-top:26px}
+  footer .wrap{padding:22px 20px 34px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:12.3px}
+  footer a{color:var(--muted)}
+
+  /* 响应式 */
+  @media (max-width:1000px){
+    .main{grid-template-columns:1fr}
+    .side{display:none;position:static}
+    .banner-in{grid-template-columns:1fr;padding:22px}
+    .banner-stats{border-left:0;border-top:1px solid rgba(255,255,255,.26);padding:14px 0 0;justify-content:space-around}
+    .searchwrap{max-width:none}
+    .topnav a:not(.mail){display:none}
+  }
+  @media (max-width:620px){
+    .topbar .wrap{height:auto;padding:10px 14px 12px;flex-wrap:wrap;gap:10px}
+    .searchwrap{order:3;flex-basis:100%}
+    .banner{margin-top:12px}
+    .banner h1{font-size:22px}
+    .grid{grid-template-columns:1fr}
+    .wrap{padding:0 14px}
+    .tabstrip button{padding:11px 10px 9px;font-size:13px}
+    .filterbar .total{margin-left:0;width:100%}
+    footer .wrap{padding:18px 14px 28px}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="logo" href="/"><span class="logo-mark">黄</span>小黄<em>作品库</em></a>
+
+    <form class="searchwrap" id="searchForm" onsubmit="return false">
+      <select id="scope" aria-label="搜索范围">
+        <option value="all">全部</option>
+        <option value="web">Web 应用</option>
+        <option value="system">系统工具</option>
+      </select>
+      <input id="q" type="search" placeholder="搜索作品名、技术栈，例如 PHP / ARM64 / xlsx" autocomplete="off" aria-label="搜索作品">
+      <button type="button" id="doSearch">搜索</button>
+    </form>
+
+    <nav class="topnav">
+      <a class="on" href="#resContainer">作品库</a>
+      <a href="#about">关于</a>
+      <a href="#contact">联系</a>
+      <a class="mail" href="mailto:1924053793@qq.com">邮件</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap banner">
+  <div class="banner-in">
+    <div>
+      <h1><span class="avatar">黄</span>小黄</h1>
+      <p>一个代码爱好者。写工具、做安装包，喜欢把部署压成一条命令，也喜欢把需要服务端的东西塞进浏览器里跑。下面是能直接点开看的东西。</p>
+      <div class="banner-links">
+        <a class="p" href="#resContainer">浏览作品</a>
+        <a class="g" href="https://github.com/MrY551" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </div>
+    </div>
+    <div class="banner-stats">
+      <div><b>2</b><span>作品</span></div>
+      <div><b>1</b><span>在线演示</span></div>
+      <div><b>MIT</b><span>许可</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap main" id="resContainer">
+
+  <aside class="side">
+    <div class="box">
+      <div class="box-h">作品分类</div>
+      <div class="box-b" style="padding:6px">
+        <button class="cat" aria-pressed="true"  data-type="all">全部作品 <span class="n">2</span></button>
+        <button class="cat" aria-pressed="false" data-type="web">Web 应用 <span class="n">1</span></button>
+        <button class="cat" aria-pressed="false" data-type="system">系统工具 <span class="n">1</span></button>
+      </div>
+    </div>
+    <div class="box">
+      <div class="box-h">概览</div>
+      <div class="box-b kv">
+        <div><span class="k">作品</span><span class="v">2 个</span></div>
+        <div><span class="k">主语言</span><span class="v">PHP / Shell</span></div>
+        <div><span class="k">许可</span><span class="v">MIT</span></div>
+        <div><span class="k">在线演示</span><span class="v">1 个</span></div>
+      </div>
+    </div>
+    <div class="box">
+      <div class="box-h">技术栈</div>
+      <div class="box-b">
+        <div class="stack">
+          <span>PHP</span><span>MySQL</span><span>JavaScript</span><span>Node.js</span>
+          <span>Python</span><span>Shell</span><span>Nginx</span><span>Apache</span>
+          <span>Debian 打包</span><span>ARM64</span><span>Linux 运维</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main>
+    <div class="tabstrip" id="tabstrip">
+      <button aria-pressed="true"  data-type="all">全部 <span class="n">2</span></button>
+      <button aria-pressed="false" data-type="web">Web 应用 <span class="n">1</span></button>
+      <button aria-pressed="false" data-type="system">系统工具 <span class="n">1</span></button>
+    </div>
+
+    <div class="filterbar">
+      <div class="grp">
+        <span class="lab">许可</span>
+        <button class="chip" aria-pressed="false" data-lic="MIT">MIT</button>
+      </div>
+      <div class="grp">
+        <span class="lab">形态</span>
+        <button class="chip" aria-pressed="false" data-form="demo">有在线演示</button>
+        <button class="chip" aria-pressed="false" data-form="src">仅源码</button>
+      </div>
+      <div class="grp">
+        <span class="lab">排序</span>
+        <select id="sort">
+          <option value="default">默认（推荐）</option>
+          <option value="name">名称 A→Z</option>
+          <option value="type">按分类</option>
+        </select>
+      </div>
+      <div class="total">共 <b id="count">2</b> 个作品</div>
+    </div>
+
+    <div class="grid" id="grid">
+
+      <article class="card" data-type="web" data-lic="MIT" data-form="demo"
+               data-name="文件登记系统"
+               data-search="文件登记系统 php mysql 公文 编号 签批 批示 xlsx 导出 备份 登记 web">
+        <div class="cover blue">
+          <span class="kind">Web 应用</span>
+          <span class="lic">MIT</span>
+          <span class="glyph">文件登记系统</span>
+          <span class="sub">PHP · MySQL · 零依赖 xlsx</span>
+          <div class="hover">
+            <a href="/demo/" target="_blank" rel="noopener">在线演示</a>
+            <a class="ghost" href="https://github.com/MrY551/wenjian" target="_blank" rel="noopener noreferrer">查看仓库</a>
+          </div>
+        </div>
+        <div class="body">
+          <h3><a href="https://github.com/MrY551/wenjian" target="_blank" rel="noopener noreferrer">文件登记系统</a></h3>
+          <p>选前缀自动生成公文编号（<code>前缀2026【001】</code>），逐级签批、首长批示留痕、多条件筛选分页；数据库可导出/导入 SQL 备份，导出真 xlsx 且不依赖 zip 扩展。</p>
+          <div class="tags">
+            <span>PHP 7.3+</span><span>MySQL</span><span>xlsx 导出</span><span>CSRF</span>
+          </div>
+        </div>
+        <div class="foot">
+          <span class="meta"><i>PHP</i><i>MIT</i><i>可演示</i></span>
+          <a class="demo" href="/demo/" target="_blank" rel="noopener">在线演示 ↗</a>
+        </div>
+      </article>
+
+      <article class="card" data-type="system" data-lic="MIT" data-form="src"
+               data-name="Xiao Huang 银河麒麟 ARM64 Web 环境安装包"
+               data-search="xiaohuang 银河麒麟 arm64 web 环境 安装包 phpstudy nginx apache php-fpm mariadb vsftpd deb run kylin 系统工具">
+        <div class="cover violet">
+          <span class="kind">系统工具</span>
+          <span class="lic">MIT</span>
+          <span class="glyph">Xiao Huang</span>
+          <span class="sub">银河麒麟 ARM64 Web 环境安装包</span>
+          <div class="hover">
+            <a href="https://github.com/MrY551/ARM-" target="_blank" rel="noopener noreferrer">查看仓库</a>
+          </div>
+        </div>
+        <div class="body">
+          <h3><a href="https://github.com/MrY551/ARM-" target="_blank" rel="noopener noreferrer">Xiao Huang — 银河麒麟 ARM64 Web 环境安装包</a></h3>
+          <p>把 Windows 版 phpStudy V8 的目录布局、组件配置与路径规则复刻到银河麒麟 V10 / aarch64。Nginx、Apache、PHP-FPM、MariaDB、vsftpd 全部内置自带依赖库，安装不联网，产物 deb 与自解压 run。</p>
+          <div class="tags">
+            <span>Shell</span><span>Debian 打包</span><span>ARM64</span><span>离线安装</span>
+          </div>
+        </div>
+        <div class="foot">
+          <span class="meta"><i>Shell</i><i>MIT</i><i>deb / run</i></span>
+          <a href="https://github.com/MrY551/ARM-" target="_blank" rel="noopener noreferrer">仓库 ↗</a>
+        </div>
+      </article>
+
+    </div>
+
+    <div class="pager">
+      <button class="pg" disabled>上一页</button>
+      <button class="pg" aria-current="true">1</button>
+      <button class="pg" disabled>下一页</button>
+      <span class="info" id="pagerInfo">共 2 条 · 第 1 / 1 页</span>
+    </div>
+
+    <div class="notice">
+      <b>在线演示可直接登录</b><span class="pill">无需注册</span><br>
+      账号 <code>demo</code> / 口令 <code>demo1234</code>（superadmin，可进用户管理）；普通账号 <code>zhang</code> / <code>User@1234</code>、<code>li</code> / <code>User@1234</code> 用来看按用户隔离的数据视图。演示库每 30 分钟自动重置，随便点。
+    </div>
+
+    <section class="sec" id="about">
+      <div class="sec-hd"><h2>关于我</h2><span>About</span></div>
+      <div class="about">
+        <p>我是小黄，一个代码爱好者。日常写工具和脚本，更在意“能不能直接跑起来”，而不是写了多少行。</p>
+        <p>做过的两类活儿：一类是把 Windows 版 phpStudy V8 的目录布局、组件配置和路径规则复刻到银河麒麟 ARM64，做成离线可装的包；一类是把登记、核对这类活儿放进浏览器里直接跑。过程中借阅了大量开源项目，站在别人肩膀上拼装、改造、补齐验证用例。</p>
+        <div class="stack">
+          <span>PHP</span><span>MySQL</span><span>JavaScript</span><span>Node.js</span>
+          <span>Python</span><span>Shell</span><span>Nginx</span><span>Apache</span>
+          <span>Debian 打包</span><span>ARM64</span><span>Linux 运维</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec" id="contact">
+      <div class="sec-hd"><h2>联系</h2><span>Contact</span></div>
+      <div class="contacts">
+        <div class="contact"><div class="ico">✉</div><div><div class="l">邮箱</div><a class="v" href="mailto:1924053793@qq.com">1924053793@qq.com</a></div></div>
+        <div class="contact"><div class="ico">⌥</div><div><div class="l">GitHub</div><a class="v" href="https://github.com/MrY551" target="_blank" rel="noopener noreferrer">github.com/MrY551</a></div></div>
+        <div class="contact"><div class="ico">✆</div><div><div class="l">微信</div><span class="v">HuangYi7763</span></div></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="y"></span> 小黄 · 作品库</span>
+    <span>Nginx 1.28 · PHP 8.5 · 自建服务器托管　<a href="#resContainer">回到顶部</a></span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var grid = document.getElementById('grid');
+  var cards = [].slice.call(grid.querySelectorAll('.card'));
+  var countEl = document.getElementById('count');
+  var pagerInfo = document.getElementById('pagerInfo');
+  var q = document.getElementById('q');
+  var scope = document.getElementById('scope');
+  var sortSel = document.getElementById('sort');
+  var groups = [document.getElementById('tabstrip'), document.querySelector('.side')];
+
+  var state = { type: 'all', keyword: '', lic: null, form: null, sort: 'default' };
+
+  function match(c) {
+    if (state.type !== 'all' && c.dataset.type !== state.type) return false;
+    if (state.lic && c.dataset.lic !== state.lic) return false;
+    if (state.form && c.dataset.form !== state.form) return false;
+    if (state.keyword) {
+      var hay = ((c.dataset.search || '') + ' ' + c.textContent).toLowerCase();
+      if (hay.indexOf(state.keyword) < 0) return false;
+    }
+    return true;
+  }
+
+  function render() {
+    var shown = 0;
+    cards.forEach(function (c) {
+      var ok = match(c);
+      c.hidden = !ok;
+      if (ok) shown++;
+    });
+
+    // 排序
+    var visible = cards.filter(function (c) { return !c.hidden; });
+    if (state.sort === 'name') {
+      visible.sort(function (a, b) { return a.dataset.name.localeCompare(b.dataset.name, 'zh'); });
+    } else if (state.sort === 'type') {
+      visible.sort(function (a, b) { return a.dataset.type.localeCompare(b.dataset.type); });
+    } else {
+      visible.sort(function (a, b) { return cards.indexOf(a) - cards.indexOf(b); });
+    }
+    visible.forEach(function (c) { grid.appendChild(c); });
+
+    countEl.textContent = shown;
+    pagerInfo.textContent = '共 ' + shown + ' 条 · 第 1 / 1 页';
+  }
+
+  function setType(t) {
+    state.type = t;
+    groups.forEach(function (g) {
+      if (!g) return;
+      [].forEach.call(g.querySelectorAll('[data-type]'), function (b) {
+        b.setAttribute('aria-pressed', String(b.dataset.type === t));
+      });
+    });
+    render();
+  }
+
+  groups.forEach(function (g) {
+    if (!g) return;
+    g.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-type]');
+      if (b) setType(b.dataset.type);
+    });
+  });
+
+  [].forEach.call(document.querySelectorAll('.chip[data-lic]'), function (b) {
+    b.addEventListener('click', function () {
+      var on = b.getAttribute('aria-pressed') === 'true';
+      b.setAttribute('aria-pressed', String(!on));
+      state.lic = on ? null : b.dataset.lic;
+      render();
+    });
+  });
+
+  [].forEach.call(document.querySelectorAll('.chip[data-form]'), function (b) {
+    b.addEventListener('click', function () {
+      var on = b.getAttribute('aria-pressed') === 'true';
+      [].forEach.call(document.querySelectorAll('.chip[data-form]'), function (x) {
+        x.setAttribute('aria-pressed', 'false');
+      });
+      if (on) { state.form = null; }
+      else { b.setAttribute('aria-pressed', 'true'); state.form = b.dataset.form; }
+      render();
+    });
+  });
+
+  sortSel.addEventListener('change', function () { state.sort = sortSel.value; render(); });
+
+  function doSearch() {
+    state.keyword = q.value.trim().toLowerCase();
+    if (state.keyword && scope.value !== 'all' && state.type === 'all') setType(scope.value);
+    render();
+    document.getElementById('resContainer').scrollIntoView({ block: 'start' });
+  }
+
+  var t;
+  q.addEventListener('input', function () {
+    clearTimeout(t);
+    t = setTimeout(function () { state.keyword = q.value.trim().toLowerCase(); render(); }, 140);
+  });
+  document.getElementById('doSearch').addEventListener('click', doSearch);
+  q.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); doSearch(); } });
+
+  document.getElementById('y').textContent = new Date().getFullYear();
+  render();
+})();
+</script>
+</body>
+</html>

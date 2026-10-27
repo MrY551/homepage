@@ -1,0 +1,26 @@
+{
+  "wenjian": {
+    "title": "文件登记系统",
+    "type": "web",
+    "kind": "Web 应用",
+    "desc": "选前缀自动生成公文编号（前缀2026【001】），逐级签批、首长批示留痕、多条件筛选分页；数据库可导出/导入 SQL 备份（导入前自动快照），导出真 xlsx 且不依赖 zip 扩展。",
+    "tags": ["PHP 7.3+", "MySQL", "xlsx 导出", "CSRF"],
+    "demo": "/demo/"
+  },
+  "ARM-": {
+    "title": "Xiao Huang — 银河麒麟 ARM64 Web 环境安装包",
+    "type": "system",
+    "kind": "系统工具",
+    "desc": "把 Windows 版 phpStudy V8 的目录布局、组件配置与路径规则复刻到银河麒麟 V10 / aarch64。Nginx、Apache、PHP-FPM、MariaDB、vsftpd 全部内置且自带依赖库，安装不联网，产物为 deb 与自解压 run。",
+    "tags": ["Shell", "Debian 打包", "ARM64", "离线安装"]
+  },
+  "angquan": {
+    "title": "安全隐患管理平台",
+    "type": "web",
+    "kind": "Web 应用",
+    "desc": "记录与跟踪安全隐患条目：登记、分派、整改、复查闭环，带邮件通知与可视化数据图，按角色区分权限。",
+    "tags": ["Web", "隐患闭环", "可视化图表", "邮件通知"]
+  },
+  "OpenCode": { "skip": true },
+  "vibe-kanban": { "skip": true }
+}

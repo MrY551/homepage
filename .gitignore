@@ -1,0 +1,6 @@
+# 验收截图与临时产物不入库
+shot-*.png
+*.tmp
+*.log
+node_modules/
+.DS_Store
