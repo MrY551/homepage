@@ -3,29 +3,32 @@
     "title": "文件登记系统",
     "type": "web",
     "kind": "Web 应用",
-    "desc": "选前缀自动生成公文编号（前缀2026【001】），逐级签批、首长批示留痕、多条件筛选分页；数据库可导出/导入 SQL 备份（导入前自动快照），导出真 xlsx 且不依赖 zip 扩展。",
-    "tags": ["PHP 7.3+", "MySQL", "xlsx 导出", "CSRF"],
+    "desc": "PHP + MySQL 单体应用：选前缀自动生成公文编号（前缀2026【001】），逐级签批、首长批示留痕，按编号 / 状态 / 前缀 / 年份 / 日期区间筛选分页。数据库可导出导入 SQL（导入前自动快照）；xlsx 导出内置纯 PHP 的 ZIP 打包器，没装 zip 扩展也能出真表头真样式。",
+    "tags": ["PHP 7.3+", "MySQL 5.7+", "xlsx 导出", "四表设计"],
+    "license": "MIT",
     "demo": "/demo/"
   },
   "ARM-": {
-    "title": "Xiao Huang — 银河麒麟 ARM64 Web 环境安装包",
+    "title": "Xiao Huang — 银河麒麟 ARM64 Web 环境",
     "type": "system",
     "kind": "系统工具",
-    "desc": "把 Windows 版 phpStudy V8 的目录布局、组件配置与路径规则复刻到银河麒麟 V10 / aarch64。Nginx、Apache、PHP-FPM、MariaDB、vsftpd 全部内置且自带依赖库，安装不联网，产物为 deb 与自解压 run。",
-    "tags": ["Shell", "Debian 打包", "ARM64", "离线安装"]
+    "desc": "把 Windows 版 phpStudy V8 的目录布局、组件配置与站点模板复刻到银河麒麟 V10 / aarch64。五个组件各自带 loader 与依赖库，glibc ≥ 2.17 就能离线装；配置全落在安装目录、不碰 /etc；18 个子命令 + 11 页面板，19 项验收用例，产物 deb 92 MB / run 93 MB。",
+    "tags": ["Bash 2.5k 行", "ARM64 自包含", "deb + run", "11 页面板"],
+    "license": "MIT"
   },
   "angquan": {
     "title": "安全隐患管理平台",
     "type": "web",
     "kind": "Web 应用",
-    "desc": "记录与跟踪安全隐患条目：登记、分派、整改、复查闭环，带邮件通知与可视化数据图，按角色区分权限。",
-    "tags": ["Web", "隐患闭环", "可视化图表", "邮件通知"]
+    "desc": "安全隐患管理平台：登记隐患条目、跟踪整改进度，带邮件通知与可视化数据图。仓库目前只有 README 与 Apache-2.0 许可，代码尚未上传。",
+    "tags": ["Web", "隐患台账", "可视化图表", "代码待上传"],
+    "license": "Apache-2.0"
   },
   "xiaohuangOFD": {
     "title": "小黄 OFD — 阅读 / 编辑 / 打印",
     "type": "system",
     "kind": "系统工具",
-    "desc": "银河麒麟与其它 Linux 桌面上的 OFD 读写打印工具，按 GB/T 33190-2016 实现。桌面端（Qt）、网页端（浏览器 Canvas）、命令行三种形态共用同一个纯 Python 核心库 ofdlite：阅读、改字、拼版打印、转 PDF/PNG/SVG、抽文本、CUPS 直打，另带 deb 打包与 CI 校验。",
+    "desc": "银河麒麟与其它 Linux 桌面上的 OFD 读写打印工具，按 GB/T 33190-2016 实现。桌面端（Qt）、网页端（Canvas）、命令行三种形态共用纯 Python 核心库 ofdlite：阅读、改字、拼版打印、转 PDF / PNG / SVG、抽文本、CUPS 直打；另带 deb 打包与 CI 校验。",
     "tags": ["Python", "GB/T 33190", "Qt + Canvas", "deb 打包"],
     "license": "自有许可（可改不可去名）"
   }

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#05050f">
 <title>小黄 · 热爱代码，奔赴热爱</title>
-<meta name="description" content="小黄的个人主页：文件登记系统（PHP + MySQL，含在线演示）、Xiao Huang 银河麒麟 ARM64 Web 环境安装包。">
+<meta name="description" content="小黄的个人主页：文件登记系统（PHP + MySQL，含在线演示）、小黄 OFD 阅读编辑器（Python，GB/T 33190）、Xiao Huang 银河麒麟 ARM64 Web 环境安装包、安全隐患管理平台。">
 <meta name="author" content="小黄">
 <meta property="og:title" content="小黄 · 热爱代码，奔赴热爱">
 <meta property="og:description" content="一个代码爱好者。写工具、做安装包，把需要服务端的东西塞进浏览器里跑。">
@@ -444,15 +444,30 @@
       <button class="pill" aria-pressed="true"  data-type="all">全部</button>
       <button class="pill" aria-pressed="false" data-type="web">Web 应用</button>
       <button class="pill" aria-pressed="false" data-type="system">系统工具</button>
-      <span class="count">共 <b id="count">2</b> 个作品</span>
+      <span class="count">共 <b id="count">4</b> 个作品</span>
     </div>
 
     <div class="works" id="works-grid">
       <!-- WORKS:START -->
-      <article class="work" data-type="system" data-search="xiaohuangofd 小黄 ofd — 阅读 / 编辑 / 打印 银河麒麟与其它 linux 桌面上的 ofd 读写打印工具，按 gb/t 33190-2016 实现。桌面端（qt）、网页端（浏览器 canvas）、命令行三种形态共用同一个纯 python 核心库 ofdlite：阅读、改字、拼版打印、转 pdf/png/svg、抽文本、cups 直打，另带 deb 打包与 ci 校验。  python system">
+      <article class="work" data-type="system" data-search="arm- xiao huang — 银河麒麟 arm64 web 环境 把 windows 版 phpstudy v8 的目录布局、组件配置与站点模板复刻到银河麒麟 v10 / aarch64。五个组件各自带 loader 与依赖库，glibc ≥ 2.17 就能离线装；配置全落在安装目录、不碰 /etc；18 个子命令 + 11 页面板，19 项验收用例，产物 deb 92 mb / run 93 mb。  shell system">
+        <div class="kicker"><b>系统工具</b><i>MIT</i></div>
+        <h3>Xiao Huang — 银河麒麟 ARM64 Web 环境</h3>
+        <p>把 Windows 版 phpStudy V8 的目录布局、组件配置与站点模板复刻到银河麒麟 V10 / aarch64。五个组件各自带 loader 与依赖库，glibc ≥ 2.17 就能离线装；配置全落在安装目录、不碰 /etc；18 个子命令 + 11 页面板，19 项验收用例，产物 deb 92 MB / run 93 MB。</p>
+        <div class="tags">
+          <span>Bash 2.5k 行</span>
+          <span>ARM64 自包含</span>
+          <span>deb + run</span>
+          <span>11 页面板</span>
+        </div>
+        <div class="links">
+          <a href="https://github.com/MrY551/ARM-" target="_blank" rel="noopener noreferrer">查看仓库 ↗</a>
+        </div>
+      </article>
+
+      <article class="work" data-type="system" data-search="xiaohuangofd 小黄 ofd — 阅读 / 编辑 / 打印 银河麒麟与其它 linux 桌面上的 ofd 读写打印工具，按 gb/t 33190-2016 实现。桌面端（qt）、网页端（canvas）、命令行三种形态共用纯 python 核心库 ofdlite：阅读、改字、拼版打印、转 pdf / png / svg、抽文本、cups 直打；另带 deb 打包与 ci 校验。  python system">
         <div class="kicker"><b>系统工具</b><i>自有许可（可改不可去名）</i></div>
         <h3>小黄 OFD — 阅读 / 编辑 / 打印</h3>
-        <p>银河麒麟与其它 Linux 桌面上的 OFD 读写打印工具，按 GB/T 33190-2016 实现。桌面端（Qt）、网页端（浏览器 Canvas）、命令行三种形态共用同一个纯 Python 核心库 ofdlite：阅读、改字、拼版打印、转 PDF/PNG/SVG、抽文本、CUPS 直打，另带 deb 打包与 CI 校验。</p>
+        <p>银河麒麟与其它 Linux 桌面上的 OFD 读写打印工具，按 GB/T 33190-2016 实现。桌面端（Qt）、网页端（Canvas）、命令行三种形态共用纯 Python 核心库 ofdlite：阅读、改字、拼版打印、转 PDF / PNG / SVG、抽文本、CUPS 直打；另带 deb 打包与 CI 校验。</p>
         <div class="tags">
           <span>Python</span>
           <span>GB/T 33190</span>
@@ -464,30 +479,15 @@
         </div>
       </article>
 
-      <article class="work" data-type="system" data-search="arm- xiao huang — 银河麒麟 arm64 web 环境安装包 把 windows 版 phpstudy v8 的目录布局、组件配置与路径规则复刻到银河麒麟 v10 / aarch64。nginx、apache、php-fpm、mariadb、vsftpd 全部内置且自带依赖库，安装不联网，产物为 deb 与自解压 run。  shell system">
-        <div class="kicker"><b>系统工具</b><i>MIT</i></div>
-        <h3>Xiao Huang — 银河麒麟 ARM64 Web 环境安装包</h3>
-        <p>把 Windows 版 phpStudy V8 的目录布局、组件配置与路径规则复刻到银河麒麟 V10 / aarch64。Nginx、Apache、PHP-FPM、MariaDB、vsftpd 全部内置且自带依赖库，安装不联网，产物为 deb 与自解压 run。</p>
-        <div class="tags">
-          <span>Shell</span>
-          <span>Debian 打包</span>
-          <span>ARM64</span>
-          <span>离线安装</span>
-        </div>
-        <div class="links">
-          <a href="https://github.com/MrY551/ARM-" target="_blank" rel="noopener noreferrer">查看仓库 ↗</a>
-        </div>
-      </article>
-
-      <article class="work" data-type="web" data-search="wenjian 文件登记系统 选前缀自动生成公文编号（前缀2026【001】），逐级签批、首长批示留痕、多条件筛选分页；数据库可导出/导入 sql 备份（导入前自动快照），导出真 xlsx 且不依赖 zip 扩展。  php web">
+      <article class="work" data-type="web" data-search="wenjian 文件登记系统 php + mysql 单体应用：选前缀自动生成公文编号（前缀2026【001】），逐级签批、首长批示留痕，按编号 / 状态 / 前缀 / 年份 / 日期区间筛选分页。数据库可导出导入 sql（导入前自动快照）；xlsx 导出内置纯 php 的 zip 打包器，没装 zip 扩展也能出真表头真样式。  php web">
         <div class="kicker"><b>Web 应用</b><i>MIT</i></div>
         <h3>文件登记系统</h3>
-        <p>选前缀自动生成公文编号（前缀2026【001】），逐级签批、首长批示留痕、多条件筛选分页；数据库可导出/导入 SQL 备份（导入前自动快照），导出真 xlsx 且不依赖 zip 扩展。</p>
+        <p>PHP + MySQL 单体应用：选前缀自动生成公文编号（前缀2026【001】），逐级签批、首长批示留痕，按编号 / 状态 / 前缀 / 年份 / 日期区间筛选分页。数据库可导出导入 SQL（导入前自动快照）；xlsx 导出内置纯 PHP 的 ZIP 打包器，没装 zip 扩展也能出真表头真样式。</p>
         <div class="tags">
           <span>PHP 7.3+</span>
-          <span>MySQL</span>
+          <span>MySQL 5.7+</span>
           <span>xlsx 导出</span>
-          <span>CSRF</span>
+          <span>四表设计</span>
         </div>
         <div class="links">
           <a class="demo" href="/demo/" target="_blank" rel="noopener">在线演示 ↗</a>
@@ -495,15 +495,15 @@
         </div>
       </article>
 
-      <article class="work" data-type="web" data-search="angquan 安全隐患管理平台 记录与跟踪安全隐患条目：登记、分派、整改、复查闭环，带邮件通知与可视化数据图，按角色区分权限。   web">
+      <article class="work" data-type="web" data-search="angquan 安全隐患管理平台 安全隐患管理平台：登记隐患条目、跟踪整改进度，带邮件通知与可视化数据图。仓库目前只有 readme 与 apache-2.0 许可，代码尚未上传。   web">
         <div class="kicker"><b>Web 应用</b><i>Apache-2.0</i></div>
         <h3>安全隐患管理平台</h3>
-        <p>记录与跟踪安全隐患条目：登记、分派、整改、复查闭环，带邮件通知与可视化数据图，按角色区分权限。</p>
+        <p>安全隐患管理平台：登记隐患条目、跟踪整改进度，带邮件通知与可视化数据图。仓库目前只有 README 与 Apache-2.0 许可，代码尚未上传。</p>
         <div class="tags">
           <span>Web</span>
-          <span>隐患闭环</span>
+          <span>隐患台账</span>
           <span>可视化图表</span>
-          <span>邮件通知</span>
+          <span>代码待上传</span>
         </div>
         <div class="links">
           <a href="https://github.com/MrY551/angquan" target="_blank" rel="noopener noreferrer">查看仓库 ↗</a>
@@ -522,7 +522,7 @@
     <div class="sec-hd"><h2>关于</h2><span>About</span></div>
     <div class="about">
       <p>我是小黄，一个代码爱好者。日常写工具和脚本，更在意“能不能直接跑起来”，而不是写了多少行。</p>
-      <p>做过的两类活儿：一类是把 Windows 版 phpStudy V8 的目录布局、组件配置和路径规则复刻到银河麒麟 ARM64，做成离线可装的包；一类是把登记、核对这类活儿放进浏览器里直接跑。过程中借阅了大量开源项目，站在别人肩膀上拼装、改造、补齐验证用例。</p>
+      <p>手上有四件在维护的东西：一个按 GB/T 33190 写的 OFD 读写打印工具（桌面 / 网页 / 命令行三形态共用一套 Python 核心库）；一个把 Windows 版 phpStudy V8 复刻到银河麒麟 ARM64 的离线环境包；一个跑在浏览器里的文件编号登记系统；还有一个安全隐患管理平台。共同点是都追求「解压或装完就能跑」，不喜欢让使用者先去配一堆环境。</p>
       <div class="stack">
         <span>PHP</span><span>MySQL</span><span>JavaScript</span><span>Node.js</span>
         <span>Python</span><span>Shell</span><span>Nginx</span><span>Apache</span>
