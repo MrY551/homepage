@@ -61,7 +61,11 @@ function toWork(r) {
   if (o.demo) links.push(`<a class="demo" href="${esc(o.demo)}" target="_blank" rel="noopener">在线演示 ↗</a>`);
   links.push(`<a href="${esc(r.html_url)}" target="_blank" rel="noopener noreferrer">查看仓库 ↗</a>`);
 
-  const badge = isFork ? `<i>Fork · ${esc(r.license?.spdx_id || 'MIT')}</i>` : `<i>${esc(r.license?.spdx_id || 'MIT')}</i>`;
+  // 许可证：GitHub 认不出的自定义许可会给 NOASSERTION，不能拿它当 MIT 展示
+  const spdxRaw = r.license && r.license.spdx_id;
+  const spdx = spdxRaw && spdxRaw !== 'NOASSERTION' ? spdxRaw : null;
+  const lic = o.license || spdx || '未声明许可';
+  const badge = isFork ? `<i>Fork · ${esc(lic)}</i>` : `<i>${esc(lic)}</i>`;
 
   return `      <article class="work" data-type="${kind}" data-search="${esc(search)}">
         <div class="kicker"><b>${esc(o.kind || KIND[kind] || KIND.other)}</b>${badge}</div>

@@ -26,6 +26,7 @@
     "type": "system",
     "kind": "系统工具",
     "desc": "银河麒麟与其它 Linux 桌面上的 OFD 读写打印工具，按 GB/T 33190-2016 实现。桌面端（Qt）、网页端（浏览器 Canvas）、命令行三种形态共用同一个纯 Python 核心库 ofdlite：阅读、改字、拼版打印、转 PDF/PNG/SVG、抽文本、CUPS 直打，另带 deb 打包与 CI 校验。",
-    "tags": ["Python", "GB/T 33190", "Qt + Canvas", "deb 打包"]
+    "tags": ["Python", "GB/T 33190", "Qt + Canvas", "deb 打包"],
+    "license": "自有许可（可改不可去名）"
   }
 }
