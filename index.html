@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#05050f">
 <title>小黄 · 热爱代码，奔赴热爱</title>
-<meta name="description" content="小黄的个人主页：文件登记系统（PHP + MySQL，含在线演示）、小黄 OFD 阅读编辑器（Python，GB/T 33190）、Xiao Huang 银河麒麟 ARM64 Web 环境安装包、安全隐患管理平台。">
+<meta name="description" content="小黄的个人主页：OFD 版式文档读写打印工具（Python，GB/T 33190）、国产系统 Web 环境面板（银河麒麟 ARM64）、公文编号登记系统（PHP + MySQL，含在线演示）、安全隐患管理平台。">
 <meta name="author" content="小黄">
 <meta property="og:title" content="小黄 · 热爱代码，奔赴热爱">
 <meta property="og:description" content="一个代码爱好者。写工具、做安装包，把需要服务端的东西塞进浏览器里跑。">
@@ -330,6 +330,8 @@
     .page{padding:16px 14px 44px}
     .hero-top{flex-direction:column;align-items:flex-start;gap:16px}
     .work{padding:20px 18px 16px}
+    /* 手机单列宽度足够，摘要不再截断，避免"显示不全" */
+    .work p{display:block;-webkit-line-clamp:unset;line-clamp:unset;overflow:visible}
     .count{margin-left:0;width:100%}
     footer{flex-direction:column;gap:6px}
   }
@@ -423,7 +425,7 @@
       <div class="who">
         <h1>小黄</h1>
         <p class="tag">热爱代码，奔赴热爱</p>
-        <p class="sub">一个代码爱好者。写工具、做安装包，喜欢把部署压成一条命令，也喜欢把需要服务端的东西塞进浏览器里跑。</p>
+        <p class="sub">写工具，也写能直接跑起来的整套环境。手上有四件在维护：OFD 版式文档工具、国产系统上的 Web 环境面板、公文编号登记系统、安全隐患管理平台。都不要求使用者先配一堆依赖。</p>
       </div>
     </div>
 
@@ -453,45 +455,45 @@
 
     <div class="works" id="works-grid">
       <!-- WORKS:START -->
-      <article class="work" data-type="system" data-search="arm- xiao huang — 银河麒麟 arm64 web 环境 把 windows 版 phpstudy v8 的目录布局、组件配置与站点模板复刻到银河麒麟 v10 / aarch64。五个组件各自带 loader 与依赖库，glibc ≥ 2.17 就能离线装；配置全落在安装目录、不碰 /etc；18 个子命令 + 11 页面板，19 项验收用例，产物 deb 92 mb / run 93 mb。  shell system">
-        <div class="kicker"><b>系统工具</b><i>MIT</i></div>
-        <h3>Xiao Huang — 银河麒麟 ARM64 Web 环境</h3>
-        <p>把 Windows 版 phpStudy V8 的目录布局、组件配置与站点模板复刻到银河麒麟 V10 / aarch64。五个组件各自带 loader 与依赖库，glibc ≥ 2.17 就能离线装；配置全落在安装目录、不碰 /etc；18 个子命令 + 11 页面板，19 项验收用例，产物 deb 92 MB / run 93 MB。</p>
-        <div class="tags">
-          <span>Bash 2.5k 行</span>
-          <span>ARM64 自包含</span>
-          <span>deb + run</span>
-          <span>11 页面板</span>
-        </div>
-        <div class="links">
-          <a href="https://github.com/MrY551/ARM-" target="_blank" rel="noopener noreferrer">查看仓库 ↗</a>
-        </div>
-      </article>
-
-      <article class="work" data-type="system" data-search="xiaohuangofd 小黄 ofd — 阅读 / 编辑 / 打印 银河麒麟与其它 linux 桌面上的 ofd 读写打印工具，按 gb/t 33190-2016 实现。桌面端（qt）、网页端（canvas）、命令行三种形态共用纯 python 核心库 ofdlite：阅读、改字、拼版打印、转 pdf / png / svg、抽文本、cups 直打；另带 deb 打包与 ci 校验。  python system">
+      <article class="work" data-type="system" data-search="xiaohuangofd 小黄 ofd — 阅读 / 编辑 / 打印 面向银河麒麟与其它 linux 桌面的 ofd 版式文档工具，按 gb/t 33190-2016 实现。桌面端 qt、网页端 canvas、命令行三种形态共用同一个纯 python 核心库 ofdlite，也只走同一份绘制指令，所以三处显示的版面一致：阅读、改字、a4 拼版打印、转 pdf / png / svg、抽文本、cups 直打，另带 deb 打包与 ci 校验。  python system">
         <div class="kicker"><b>系统工具</b><i>自有许可（可改不可去名）</i></div>
         <h3>小黄 OFD — 阅读 / 编辑 / 打印</h3>
-        <p>银河麒麟与其它 Linux 桌面上的 OFD 读写打印工具，按 GB/T 33190-2016 实现。桌面端（Qt）、网页端（Canvas）、命令行三种形态共用纯 Python 核心库 ofdlite：阅读、改字、拼版打印、转 PDF / PNG / SVG、抽文本、CUPS 直打；另带 deb 打包与 CI 校验。</p>
+        <p>面向银河麒麟与其它 Linux 桌面的 OFD 版式文档工具，按 GB/T 33190-2016 实现。桌面端 Qt、网页端 Canvas、命令行三种形态共用同一个纯 Python 核心库 ofdlite，也只走同一份绘制指令，所以三处显示的版面一致：阅读、改字、A4 拼版打印、转 PDF / PNG / SVG、抽文本、CUPS 直打，另带 deb 打包与 CI 校验。</p>
         <div class="tags">
-          <span>Python</span>
+          <span>Python 核心库</span>
           <span>GB/T 33190</span>
-          <span>Qt + Canvas</span>
-          <span>deb 打包</span>
+          <span>Qt + Canvas 同源</span>
+          <span>CUPS 打印</span>
         </div>
         <div class="links">
           <a href="https://github.com/MrY551/xiaohuangOFD" target="_blank" rel="noopener noreferrer">查看仓库 ↗</a>
         </div>
       </article>
 
-      <article class="work" data-type="web" data-search="wenjian 文件登记系统 php + mysql 单体应用：选前缀自动生成公文编号（前缀2026【001】），逐级签批、首长批示留痕，按编号 / 状态 / 前缀 / 年份 / 日期区间筛选分页。数据库可导出导入 sql（导入前自动快照）；xlsx 导出内置纯 php 的 zip 打包器，没装 zip 扩展也能出真表头真样式。  php web">
+      <article class="work" data-type="system" data-search="arm- xiao huang — 麒麟 arm64 web 环境面板 一套装完就能用的 web 环境面板，面向银河麒麟 v10 / aarch64（uos、openeuler、debian arm64 同样可跑）。nginx、apache、php-fpm、mariadb、vsftpd 五个组件各自带 loader 与依赖库，目标机 glibc ≥ 2.17 即可离线安装；配置全部渲染在安装目录内，不动系统 /etc；18 个子命令与 11 个面板页面管站点、数据库、扩展、端口、日志，19 项验收用例覆盖装到卸。  shell system">
+        <div class="kicker"><b>系统工具</b><i>MIT</i></div>
+        <h3>Xiao Huang — 麒麟 ARM64 Web 环境面板</h3>
+        <p>一套装完就能用的 Web 环境面板，面向银河麒麟 V10 / aarch64（UOS、openEuler、Debian arm64 同样可跑）。Nginx、Apache、PHP-FPM、MariaDB、vsftpd 五个组件各自带 loader 与依赖库，目标机 glibc ≥ 2.17 即可离线安装；配置全部渲染在安装目录内，不动系统 /etc；18 个子命令与 11 个面板页面管站点、数据库、扩展、端口、日志，19 项验收用例覆盖装到卸。</p>
+        <div class="tags">
+          <span>五个组件自包含</span>
+          <span>18 个子命令</span>
+          <span>11 个面板页面</span>
+          <span>deb + run</span>
+        </div>
+        <div class="links">
+          <a href="https://github.com/MrY551/ARM-" target="_blank" rel="noopener noreferrer">查看仓库 ↗</a>
+        </div>
+      </article>
+
+      <article class="work" data-type="web" data-search="wenjian 文件登记系统 跑在浏览器里的公文编号登记系统，php + mysql 单体，不引框架。选前缀自动生成编号（前缀2026【001】），逐级签批与首长批示留痕，按编号 / 状态 / 前缀 / 年份 / 日期区间筛选分页；数据库可导出导入 sql（导入前自动快照），xlsx 导出内置纯 php 的 zip 打包器，没装 zip 扩展也能出真表头真样式。  php web">
         <div class="kicker"><b>Web 应用</b><i>MIT</i></div>
         <h3>文件登记系统</h3>
-        <p>PHP + MySQL 单体应用：选前缀自动生成公文编号（前缀2026【001】），逐级签批、首长批示留痕，按编号 / 状态 / 前缀 / 年份 / 日期区间筛选分页。数据库可导出导入 SQL（导入前自动快照）；xlsx 导出内置纯 PHP 的 ZIP 打包器，没装 zip 扩展也能出真表头真样式。</p>
+        <p>跑在浏览器里的公文编号登记系统，PHP + MySQL 单体，不引框架。选前缀自动生成编号（前缀2026【001】），逐级签批与首长批示留痕，按编号 / 状态 / 前缀 / 年份 / 日期区间筛选分页；数据库可导出导入 SQL（导入前自动快照），xlsx 导出内置纯 PHP 的 ZIP 打包器，没装 zip 扩展也能出真表头真样式。</p>
         <div class="tags">
           <span>PHP 7.3+</span>
           <span>MySQL 5.7+</span>
           <span>xlsx 导出</span>
-          <span>四表设计</span>
+          <span>四张表</span>
         </div>
         <div class="links">
           <a class="demo" href="/demo/" target="_blank" rel="noopener">在线演示 ↗</a>
@@ -499,15 +501,15 @@
         </div>
       </article>
 
-      <article class="work" data-type="web" data-search="angquan 安全隐患管理平台 安全隐患管理平台：登记隐患条目、跟踪整改进度，带邮件通知与可视化数据图。仓库目前只有 readme 与 apache-2.0 许可，代码尚未上传。   web">
+      <article class="work" data-type="web" data-search="angquan 安全隐患管理平台 登记隐患条目、跟踪整改进度，带邮件通知与可视化数据图。仓库目前只有 readme 与 apache-2.0 许可，代码还在整理，尚未上传。   web">
         <div class="kicker"><b>Web 应用</b><i>Apache-2.0</i></div>
         <h3>安全隐患管理平台</h3>
-        <p>安全隐患管理平台：登记隐患条目、跟踪整改进度，带邮件通知与可视化数据图。仓库目前只有 README 与 Apache-2.0 许可，代码尚未上传。</p>
+        <p>登记隐患条目、跟踪整改进度，带邮件通知与可视化数据图。仓库目前只有 README 与 Apache-2.0 许可，代码还在整理，尚未上传。</p>
         <div class="tags">
           <span>Web</span>
           <span>隐患台账</span>
           <span>可视化图表</span>
-          <span>代码待上传</span>
+          <span>代码整理中</span>
         </div>
         <div class="links">
           <a href="https://github.com/MrY551/angquan" target="_blank" rel="noopener noreferrer">查看仓库 ↗</a>
@@ -525,8 +527,8 @@
   <section class="sec rise d3" id="about">
     <div class="sec-hd"><h2>关于</h2><span>About</span></div>
     <div class="about">
-      <p>我是小黄，一个代码爱好者。日常写工具和脚本，更在意“能不能直接跑起来”，而不是写了多少行。</p>
-      <p>手上有四件在维护的东西：一个按 GB/T 33190 写的 OFD 读写打印工具（桌面 / 网页 / 命令行三形态共用一套 Python 核心库）；一个把 Windows 版 phpStudy V8 复刻到银河麒麟 ARM64 的离线环境包；一个跑在浏览器里的文件编号登记系统；还有一个安全隐患管理平台。共同点是都追求「解压或装完就能跑」，不喜欢让使用者先去配一堆环境。</p>
+      <p>我是小黄，一个代码爱好者。日常写工具和脚本，判断标准只有一条：装完、解压完或者双击一下，它到底能不能直接用。写了多少行、用了多新的框架，不在我的记分牌上。</p>
+      <p>四件东西各不相同，思路是一样的：<b>组件自带运行时</b>——Web 环境面板把五个组件和它们依赖的库都塞进安装目录，目标机只要有 glibc 就能跑，不碰系统 /etc；<b>一条命令初始化</b>——登记系统的建库、建表、初始账号全在一条 SQL 里；<b>核心逻辑与界面分离</b>——OFD 工具的核心库是纯 Python，桌面端、网页端、命令行共用同一份绘制指令，所以三处显示的内容不会各写一套。剩下那个隐患平台代码还在整理，先把位置留着。</p>
       <div class="stack">
         <span>PHP</span><span>MySQL</span><span>JavaScript</span><span>Node.js</span>
         <span>Python</span><span>Shell</span><span>Nginx</span><span>Apache</span>
