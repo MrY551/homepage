@@ -238,11 +238,7 @@
   }
   .work .kicker i{font-style:normal;font-size:11.5px;color:var(--ink-mute);margin-left:auto}
   .work h3{margin:0 0 10px;font-size:18.5px;line-height:1.45;letter-spacing:.2px}
-  .work p{
-    margin:0 0 14px;color:var(--ink-dim);font-size:13.4px;line-height:1.8;
-    display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;line-clamp:4;
-    overflow:hidden;flex:1;
-  }
+  .work p{margin:0 0 14px;color:var(--ink-dim);font-size:13.4px;line-height:1.8;flex:1}
   .tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
   .tags span{
     font-size:11.5px;padding:3px 9px;border-radius:7px;color:#cfd3ff;
@@ -330,8 +326,8 @@
     .page{padding:16px 14px 44px}
     .hero-top{flex-direction:column;align-items:flex-start;gap:16px}
     .work{padding:20px 18px 16px}
-    /* 手机单列宽度足够，摘要不再截断，避免"显示不全" */
-    .work p{display:block;-webkit-line-clamp:unset;line-clamp:unset;overflow:visible}
+    /* 手机单列：minmax(420px) 会在 390 视口里撑出屏幕导致内容被裁 */
+    .works{grid-template-columns:1fr}
     .count{margin-left:0;width:100%}
     footer{flex-direction:column;gap:6px}
   }
