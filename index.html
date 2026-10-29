@@ -366,7 +366,6 @@
     body::after{display:none}                      /* 全屏噪点混合层很贵，手机上关掉 */
 
   }
-  @supports (content-visibility: auto){
     .sec{content-visibility:auto;contain-intrinsic-size:auto 520px}
   }</style></head>
 <body>
@@ -593,7 +592,6 @@
     g.fillStyle = grad;
     g.fillRect(0, 0, size, size);
     return c;
-  }
 
   function resize() {
     W = window.innerWidth;
